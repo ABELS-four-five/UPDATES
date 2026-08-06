@@ -1,310 +1,1516 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>UPDATES - AB ELS 4-5</title>
-
-  <script src="https://cdn.tailwindcss.com"></script>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=STIX+Two+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            roseBrand: '#A9445E',
-            roseLight: '#F8EDEF',
-            roseSoft: '#FDF7F8',
-            borderSoft: '#E7D4D9'
-          },
-          fontFamily: {
-            serif: ['STIX Two Text', 'serif']
-          }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>UPDATES — AB ELS 4-5</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=STIX+Two+Text:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          brand: '#AE1C4C',
+          brandDark: '#821338',
+          brandDeep: '#630F2B',
+          brandLight: '#FCEBF0',
+          brandSoft: '#F6D3DD',
+          surface: '#FFFAFA',
+          ink: '#2B1218'
+        },
+        fontFamily: {
+          serif: ['"STIX Two Text"', 'ui-serif', 'Georgia', 'serif'],
+          sans: ['"STIX Two Text"', 'ui-serif', 'Georgia', 'serif']
+        },
+        boxShadow: {
+          card: '0 1px 2px rgba(99,15,43,0.04), 0 8px 24px -12px rgba(99,15,43,0.12)'
         }
       }
     }
-  </script>
+  }
+</script>
+<style>
+  :root{
+    --brand: #AE1C4C;
+    --brand-dark: #821338;
+    --brand-deep: #630F2B;
+    --brand-light: #FCEBF0;
+    --brand-soft: #F6D3DD;
+  }
+  html, body { font-family: 'STIX Two Text', ui-serif, Georgia, serif; }
+  body{ background:#FFFAFA; }
 
-  <style>
-    body {
-      font-family: 'STIX Two Text', serif;
-    }
+  ::selection{ background: var(--brand-soft); color: var(--brand-deep); }
 
-    .shimmer {
-      position: relative;
-      overflow: hidden;
-      background: #ececec;
-    }
+  /* focus visibility */
+  a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible, [contenteditable]:focus-visible, [tabindex]:focus-visible{
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
 
-    .shimmer::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      transform: translateX(-100%);
-      background: linear-gradient(
-        90deg,
-        transparent,
-        rgba(255,255,255,.7),
-        transparent
-      );
-      animation: shimmer 1.4s infinite;
-    }
+  /* custom scrollbar */
+  .thin-scroll::-webkit-scrollbar{ height:6px; width:6px; }
+  .thin-scroll::-webkit-scrollbar-thumb{ background:#EBC3CF; border-radius:99px; }
+  .thin-scroll::-webkit-scrollbar-track{ background:transparent; }
 
-    @keyframes shimmer {
-      100% {
-        transform: translateX(100%);
-      }
-    }
-  </style>
+  /* shimmer skeleton */
+  .shimmer{
+    position:relative;
+    overflow:hidden;
+    background:#ECEAEA;
+  }
+  .shimmer::after{
+    content:"";
+    position:absolute; inset:0;
+    transform: translateX(-100%);
+    background: linear-gradient(90deg, rgba(236,234,234,0) 0%, rgba(255,255,255,0.75) 50%, rgba(236,234,234,0) 100%);
+    animation: shimmerMove 1.6s infinite;
+  }
+  @keyframes shimmerMove{
+    100%{ transform: translateX(100%); }
+  }
+
+  @keyframes fadeIn{ from{ opacity:0; transform:translateY(4px);} to{ opacity:1; transform:translateY(0);} }
+  .fade-in{ animation: fadeIn .35s ease both; }
+
+  @keyframes popIn{ from{ opacity:0; transform:scale(.96) translateY(6px);} to{ opacity:1; transform:scale(1) translateY(0);} }
+  .pop-in{ animation: popIn .22s cubic-bezier(.2,.9,.3,1.2) both; }
+
+  [contenteditable]:empty:before{
+    content: attr(data-placeholder);
+    color: #B79AA5;
+    pointer-events: none;
+  }
+  .rte{ min-height:140px; }
+  .rte ul{ list-style:disc; padding-left:1.4rem; }
+  .rte ol{ list-style:decimal; padding-left:1.4rem; }
+  .rte a{ color: var(--brand); text-decoration: underline; }
+
+  .toggle-pill{ transition: all .15s ease; }
+
+  .step-line{ background: linear-gradient(90deg, var(--brand), var(--brand)) no-repeat; background-size:0% 100%; transition: background-size .3s ease; }
+
+  @media (prefers-reduced-motion: reduce){
+    .shimmer::after, .fade-in, .pop-in { animation: none !important; }
+  }
+
+  .day-col-active{ background: var(--brand-light); }
+</style>
 </head>
+<body class="text-ink">
 
-<body class="bg-[#FAF6F7] text-gray-900">
+<!-- ================= SKELETON LOADER ================= -->
+<div id="skeleton" class="min-h-screen lg:flex">
+  <aside class="hidden lg:flex lg:w-64 bg-white border-r border-gray-100 flex-col p-6 gap-6">
+    <div class="space-y-2">
+      <div class="shimmer h-6 w-32 rounded-md"></div>
+      <div class="shimmer h-3 w-20 rounded-md"></div>
+    </div>
+    <div class="space-y-3 mt-4">
+      <div class="shimmer h-10 w-full rounded-xl"></div>
+      <div class="shimmer h-10 w-full rounded-xl"></div>
+      <div class="shimmer h-10 w-full rounded-xl"></div>
+      <div class="shimmer h-10 w-full rounded-xl"></div>
+      <div class="shimmer h-10 w-full rounded-xl"></div>
+    </div>
+    <div class="mt-auto flex items-center gap-3">
+      <div class="shimmer w-10 h-10 rounded-full"></div>
+      <div class="space-y-2">
+        <div class="shimmer h-3 w-20 rounded"></div>
+        <div class="shimmer h-2 w-14 rounded"></div>
+      </div>
+    </div>
+  </aside>
+  <main class="flex-1 px-4 py-6 lg:px-8 lg:py-8 max-w-7xl mx-auto w-full">
+    <div class="flex items-center justify-between mb-6">
+      <div class="space-y-2">
+        <div class="shimmer h-7 w-48 rounded-md"></div>
+        <div class="shimmer h-4 w-64 rounded-md"></div>
+      </div>
+      <div class="shimmer h-11 w-36 rounded-xl hidden lg:block"></div>
+    </div>
+    <div class="shimmer rounded-[2rem] h-64 w-full mb-6"></div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+      <div class="shimmer h-24 rounded-2xl"></div>
+      <div class="shimmer h-24 rounded-2xl"></div>
+      <div class="shimmer h-24 rounded-2xl"></div>
+    </div>
+    <div class="shimmer h-72 rounded-3xl mb-6"></div>
+    <div class="shimmer h-40 rounded-3xl"></div>
+  </main>
+</div>
 
-  <!-- Skeleton Loader -->
-  <div id="loader" class="min-h-screen p-6 space-y-4">
-    <div class="h-24 rounded-3xl shimmer"></div>
-    <div class="h-72 rounded-3xl shimmer"></div>
+<!-- ================= APP ================= -->
+<div id="app" class="min-h-screen lg:flex hidden">
 
-    <div class="grid md:grid-cols-3 gap-4">
-      <div class="h-32 rounded-2xl shimmer"></div>
-      <div class="h-32 rounded-2xl shimmer"></div>
-      <div class="h-32 rounded-2xl shimmer"></div>
+  <!-- ================= DESKTOP SIDEBAR ================= -->
+  <aside class="hidden lg:flex lg:w-64 bg-white border-r border-gray-100 flex-col">
+    <div class="p-6 border-b border-gray-100 flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl bg-brand flex items-center justify-center text-white shrink-0" id="icon-slot-brandmark"></div>
+      <div>
+        <h1 class="text-xl font-bold tracking-tight leading-none">UPDATES</h1>
+        <p class="text-xs text-gray-500 mt-1">AB ELS 4-5</p>
+      </div>
     </div>
 
-    <div class="h-72 rounded-3xl shimmer"></div>
+    <nav class="p-4 space-y-1 text-sm" id="sidebar-nav"></nav>
+
+    <div class="mt-auto p-4 border-t border-gray-100">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full bg-brandLight flex items-center justify-center text-brand font-semibold shrink-0">KL</div>
+        <div class="min-w-0">
+          <p class="text-sm font-semibold truncate">Karl Lexter</p>
+          <p class="text-xs text-gray-500 truncate" id="admin-status-label">President</p>
+        </div>
+      </div>
+      <button id="btn-admin-toggle" class="mt-4 text-sm text-brand hover:text-brandDark font-medium flex items-center gap-1.5">
+        <span id="icon-slot-lock" class="w-4 h-4"></span>
+        <span id="admin-toggle-label">Admin access</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ================= MAIN CONTENT ================= -->
+  <main class="flex-1 px-4 py-5 lg:px-8 lg:py-8 max-w-7xl mx-auto w-full pb-28 lg:pb-8">
+
+    <!-- Mobile Header -->
+    <div class="lg:hidden mb-5 flex items-center justify-between">
+      <div class="flex items-center gap-2.5">
+        <div class="w-9 h-9 rounded-xl bg-brand flex items-center justify-center text-white shrink-0" id="icon-slot-brandmark-m"></div>
+        <div>
+          <h1 class="text-lg font-bold tracking-tight leading-none">UPDATES</h1>
+          <p class="text-[11px] text-gray-500 mt-0.5">AB ELS 4-5</p>
+        </div>
+      </div>
+      <button id="btn-admin-toggle-m" class="w-9 h-9 rounded-full bg-brandLight flex items-center justify-center text-brand">
+        <span id="icon-slot-lock-m" class="w-4 h-4"></span>
+      </button>
+    </div>
+
+    <!-- PAGE: HOME -->
+    <section id="page-home" class="page-panel"></section>
+
+    <!-- PAGE: SCHEDULE -->
+    <section id="page-schedule" class="page-panel hidden"></section>
+
+    <!-- PAGE: TODO -->
+    <section id="page-todo" class="page-panel hidden"></section>
+
+    <!-- PAGE: PROFESSORS -->
+    <section id="page-professors" class="page-panel hidden"></section>
+
+    <!-- PAGE: ANNOUNCEMENTS -->
+    <section id="page-announcements" class="page-panel hidden"></section>
+
+  </main>
+</div>
+
+<!-- ================= MOBILE BOTTOM NAV ================= -->
+<nav id="mobile-nav" class="lg:hidden fixed bottom-0 inset-x-0 bg-white border-t border-gray-100 shadow-[0_-6px_24px_rgba(99,15,43,0.08)] hidden z-30">
+  <div class="max-w-md mx-auto grid grid-cols-5 text-[10px]" id="mobile-nav-items"></div>
+</nav>
+
+<!-- Mobile FAB: Create Update -->
+<button id="fab-create" class="lg:hidden hidden fixed right-4 bottom-20 z-30 w-14 h-14 rounded-full bg-brand text-white shadow-lg shadow-brand/30 flex items-center justify-center active:scale-95 transition">
+  <span id="icon-slot-fab" class="w-6 h-6"></span>
+</button>
+
+<!-- ================= TOAST ================= -->
+<div id="toast" class="fixed top-4 right-4 z-[70] hidden pop-in">
+  <div class="bg-ink text-white text-sm font-medium px-4 py-3 rounded-xl shadow-lg flex items-center gap-2">
+    <span id="icon-slot-toast" class="w-4 h-4 text-green-400"></span>
+    <span id="toast-msg">Saved</span>
   </div>
+</div>
 
-  <!-- App -->
-  <div id="app" class="hidden min-h-screen lg:flex">
+<!-- ================= MODAL ROOT ================= -->
+<div id="modal-root"></div>
 
-    <!-- Sidebar -->
-    <aside class="hidden lg:flex lg:w-64 bg-white border-r border-borderSoft flex-col">
-      <div class="p-6 border-b border-borderSoft">
-        <h1 class="text-2xl font-bold text-roseBrand">UPDATES</h1>
-        <p class="text-sm text-gray-500">AB ELS 4-5</p>
-      </div>
+<script>
+/* =========================================================================
+   ICONS — flat 2D outline SVGs (stroke=currentColor). No emoji, no 3D.
+   ========================================================================= */
+const ICON = {
+  home: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9a1 1 0 0 0 1 1H10v-5.5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1V20h3.5a1 1 0 0 0 1-1v-9"/></svg>`,
+  calendar: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 9.5h17"/><path d="M8 3v3.5M16 3v3.5"/><path d="M7.5 13h2M11 13h2M14.5 13h2M7.5 16.5h2M11 16.5h2"/></svg>`,
+  checklist: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16.5" rx="2.5"/><path d="M7.5 9.5h9M7.5 13h9M7.5 16.5h5.5"/></svg>`,
+  professor: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.4"/><path d="M4.8 20.2c1-3.6 4-5.4 7.2-5.4s6.2 1.8 7.2 5.4"/></svg>`,
+  megaphone: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 10.5v3a1.3 1.3 0 0 0 1.3 1.3H6l1.6 5H10l-1-5h1.2L18 23V1L10.2 8.2H4.8A1.3 1.3 0 0 0 3.5 9.5z"/><path d="M20.5 8.5a4 4 0 0 1 0 7"/></svg>`,
+  link: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 14.5 14.5 9.5"/><path d="M11 6.5 12.4 5A4 4 0 1 1 18 10.6l-1.5 1.4"/><path d="M13 17.5 11.6 19A4 4 0 1 1 6 13.4l1.5-1.4"/></svg>`,
+  plus: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>`,
+  shield: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.2 5 5.8v5.3c0 4.6 3 7.8 7 9 4-1.2 7-4.4 7-9V5.8z"/><path d="M9 12.2l2.1 2.1L15.5 10"/></svg>`,
+  eye: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z"/><circle cx="12" cy="12" r="2.6"/></svg>`,
+  eyeOff: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 3.5l17 17"/><path d="M10.6 5.7A9.9 9.9 0 0 1 12 5.5c6 0 9.5 6.5 9.5 6.5a13.7 13.7 0 0 1-3.2 3.9M6.5 6.9A13.5 13.5 0 0 0 2.5 12S6 18.5 12 18.5a9.8 9.8 0 0 0 3.6-.7"/><path d="M9.6 10.1A2.6 2.6 0 0 0 12 14.6a2.6 2.6 0 0 0 2.4-1.6"/></svg>`,
+  check: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5 9.5 17.5 19.5 6.5"/></svg>`,
+  checkCircle: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.3l2.6 2.6L16.5 9"/></svg>`,
+  x: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 5l14 14M19 5 5 19"/></svg>`,
+  chevronDown: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>`,
+  chevronLeft: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>`,
+  pencil: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4.2L19.5 8.7a2 2 0 0 0 0-2.8l-1.4-1.4a2 2 0 0 0-2.8 0L4 15.8z"/><path d="M13.5 6.5l3.9 3.9"/></svg>`,
+  trash: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 7.5h14"/><path d="M9.5 7.5V5.3a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v2.2"/><path d="M7 7.5 7.8 19a1.5 1.5 0 0 0 1.5 1.4h5.4A1.5 1.5 0 0 0 16.2 19l.8-11.5"/><path d="M10.3 11v6M13.7 11v6"/></svg>`,
+  clock: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.7"/><path d="M12 7.3V12l3.2 2"/></svg>`,
+  laptop: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="5.5" width="15" height="9.5" rx="1.4"/><path d="M2.7 18.5h18.6l-1.5-2.3a1 1 0 0 0-.85-.45H5.05a1 1 0 0 0-.85.45z"/></svg>`,
+  building: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3.5" width="10" height="17" rx="1.2"/><path d="M15 9.5h4v11h-4"/><path d="M8 7.2h1M11 7.2h1M8 10.4h1M11 10.4h1M8 13.6h1M11 13.6h1M8 16.8h1M11 16.8h1"/></svg>`,
+  bold: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 5h6a3.2 3.2 0 0 1 0 6.4H7z"/><path d="M7 11.4h6.6a3.4 3.4 0 0 1 0 6.8H7z"/></svg>`,
+  italic: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.5 5h6M7.5 19h6M13.6 5 10.4 19"/></svg>`,
+  underline: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 4.5V11a5.5 5.5 0 0 0 11 0V4.5"/><path d="M5 19.5h14"/></svg>`,
+  listBullet: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="4.5" cy="6.5" r="1"/><circle cx="4.5" cy="12" r="1"/><circle cx="4.5" cy="17.5" r="1"/><path d="M9 6.5h11M9 12h11M9 17.5h11"/></svg>`,
+  listNumber: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6.5h11M9 12h11M9 17.5h11"/><path d="M4 5.3h1v3M4 8.3h1.5"/><path d="M3.7 14.2c0-.7.6-1.2 1.3-1.2s1.2.5 1.2 1.1c0 .5-.3.8-.7 1.1l-1.6 1.4h2.4"/></svg>`,
+  linkSm: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M10 14 14 10"/><path d="M11.3 7.3 12.2 6.4A2.9 2.9 0 1 1 16.3 10.5l-1 .9"/><path d="M12.7 16.7l-.9.9A2.9 2.9 0 1 1 7.7 13.5l.9-.9"/></svg>`,
+  bell: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 10.5a6 6 0 0 1 12 0c0 4 1.5 5 1.5 5h-15s1.5-1 1.5-5Z"/><path d="M10.3 19a1.9 1.9 0 0 0 3.4 0"/></svg>`,
+  sparkle: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5 13.5 9l5.5 1.5-5.5 1.5L12 17.5 10.5 12 5 10.5 10.5 9z"/></svg>`,
+  book: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.2c2.4-1 5.5-1 8 .5v13c-2.5-1.5-5.6-1.5-8-.5z"/><path d="M20 5.2c-2.4-1-5.5-1-8 .5v13c2.5-1.5 5.6-1.5 8-.5z"/></svg>`,
+  quote: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 9.5c-2.2.6-3.5 2.3-3.5 4.6a3 3 0 0 0 3 3 2.8 2.8 0 0 0 2.8-2.8c0-1.5-1-2.5-2.3-2.7.2-1.4 1.2-2.3 2.5-2.7z"/><path d="M17 9.5c-2.2.6-3.5 2.3-3.5 4.6a3 3 0 0 0 3 3 2.8 2.8 0 0 0 2.8-2.8c0-1.5-1-2.5-2.3-2.7.2-1.4 1.2-2.3 2.5-2.7z"/></svg>`,
+  info: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5"/><circle cx="12" cy="8" r="0.9" fill="currentColor" stroke="none"/></svg>`,
+  arrowRight: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12h15M13 6l6 6-6 6"/></svg>`,
+};
+function icon(name, cls){ return `<span class="inline-flex ${cls||''}">${ICON[name]||''}</span>`; }
 
-      <nav class="p-4 space-y-1 text-sm">
-        <a class="flex items-center gap-3 px-4 py-3 rounded-xl bg-roseLight text-roseBrand font-semibold" href="#">Home</a>
-        <a class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-roseSoft text-gray-700" href="#schedule">Schedule</a>
-        <a class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-roseSoft text-gray-700" href="#todo">To-Do List</a>
-        <a class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-roseSoft text-gray-700" href="#announcements">Announcements</a>
-      </nav>
 
-      <div class="mt-auto p-4 border-t border-borderSoft">
-        <div class="flex items-center gap-3">
-          <img src="https://i.pravatar.cc/64?img=12" class="w-10 h-10 rounded-full" alt="Profile">
-          <div>
-            <p class="text-sm font-semibold">Karl Lexter</p>
-            <p class="text-xs text-gray-500">President</p>
-          </div>
+</html>
+
+/* =========================================================================
+   CONSTANTS
+   ========================================================================= */
+const ADMIN_PASSCODE = "45";
+const DAY_NAMES = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+const DAY_SHORT = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+const COURSES = [
+  { code: "ENGL 401", title: "Special Topics in English Across Professions" },
+  { code: "ENGL 402", title: "Practicum 1: On-Campus Practicum" },
+  { code: "ENGL 451", title: "Instructional Materials Development and Evaluation" },
+  { code: "ENGL 453", title: "Registers in English" },
+];
+const COURSE_DOT = { "ENGL 401": "bg-brand", "ENGL 402": "bg-sky-500", "ENGL 451": "bg-amber-500", "ENGL 453": "bg-emerald-500" };
+
+let isAdmin = false;
+let currentPage = "home";
+let todoFilter = "all";
+
+/* =========================================================================
+   TIME HELPERS — Asia/Manila
+   ========================================================================= */
+function phOffsetNow(){
+  // Actual instant "now", used for real deltas (UTC-based, safe for math)
+  return new Date();
+}
+function fmtDatePH(d){
+  return d.toLocaleDateString('en-US', { timeZone:'Asia/Manila', month:'short', day:'numeric', year:'numeric' });
+}
+function fmtTimePH(d){
+  return d.toLocaleTimeString('en-US', { timeZone:'Asia/Manila', hour:'numeric', minute:'2-digit', hour12:true });
+}
+function fmtDateTimePH(d){
+  return `${fmtDatePH(d)} at ${fmtTimePH(d)}`;
+}
+function fmtWeekdayPH(d){
+  return d.toLocaleDateString('en-US', { timeZone:'Asia/Manila', weekday:'long' });
+}
+function isoToLocalDate(iso){
+  return new Date(iso);
+}
+function pad2(n){ return String(n).padStart(2,'0'); }
+function to12h(hh, mm){
+  const h = parseInt(hh,10); const m = parseInt(mm,10);
+  const period = h >= 12 ? 'PM' : 'AM';
+  let h12 = h % 12; if (h12 === 0) h12 = 12;
+  return `${h12}:${pad2(m)} ${period}`;
+}
+/* Interpret a date+time input (from a <input type=date> + <input type=time>) as
+   Philippine local time (UTC+8, no DST) and return a correct UTC ISO string,
+   so deadlines count down correctly no matter where the visitor's browser is. */
+function phDateTimeToISO(dateStr, timeStr){
+  if (!dateStr) return null;
+  const [y,m,d] = dateStr.split('-').map(Number);
+  const [hh,mm] = (timeStr || "23:59").split(':').map(Number);
+  const utcMs = Date.UTC(y, (m||1)-1, d||1, hh||0, mm||0, 0) - 8*3600*1000;
+  return new Date(utcMs).toISOString();
+}
+/* Get the current Philippine wall-clock date/time fields (for "next class" day math) */
+function phNowParts(){
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'Asia/Manila', hour12: false, weekday:'short',
+    year:'numeric', month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit', second:'2-digit'
+  }).formatToParts(new Date());
+  const o = {}; parts.forEach(p => o[p.type] = p.value);
+  const weekdayIdx = DAY_SHORT.findIndex(s => s === o.weekday);
+  return { y:+o.year, m:+o.month, d:+o.day, hh:+o.hour, mm:+o.minute, ss:+o.second, weekday: weekdayIdx };
+}
+
+/* =========================================================================
+   STATE + DEFAULTS
+   ========================================================================= */
+function makeId(prefix){ return prefix + '_' + Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
+
+function defaultState(){
+  const now = phOffsetNow();
+  const inHours = (h) => new Date(now.getTime() + h*3600*1000).toISOString();
+  const inDays = (d) => new Date(now.getTime() + d*24*3600*1000).toISOString();
+
+  return {
+    announcements: [
+      {
+        id: makeId('an'),
+        title: "WE HAVE NO CLASSES TODAY!",
+        bodyHtml: "<p>Take this time to catch up on your tasks and prepare for the week ahead. Stay productive, everyone!</p>",
+        bg: "#FCEBF0",
+        postedAt: inHours(-3.5),
+      }
+    ],
+    schedule: [
+      { id: makeId('sc'), code:"ENGL 401", title:"Special Topics in English Across Professions", day:3, start:"13:30", end:"16:30", modality:"Face to Face" },
+      { id: makeId('sc'), code:"ENGL 402", title:"Practicum 1: On-Campus Practicum", day:3, start:"16:30", end:"19:30", modality:"Face to Face" },
+      { id: makeId('sc'), code:"ENGL 451", title:"Instructional Materials Development and Evaluation", day:6, start:"14:00", end:"16:00", modality:"Online" },
+      { id: makeId('sc'), code:"ENGL 453", title:"Registers in English", day:6, start:"10:30", end:"13:30", modality:"Online" },
+    ],
+    scheduleNotes: [],
+    todos: [
+      { id: makeId('td'), course:"ENGL 401", title:"Speech Analysis Report", description:"Submit the written report and rubric.", deadline: inHours(3.5), priority:"High", isEvent:false, completed:false },
+      { id: makeId('td'), course:"ENGL 402", title:"Log Practicum Hours", description:"Update your on-campus practicum logbook.", deadline: inHours(20), priority:"Medium", isEvent:false, completed:false },
+      { id: makeId('td'), course:"ENGL 451", title:"Instructional Material Draft", description:"First draft of the learning material for review.", deadline: inDays(5), priority:"Medium", isEvent:false, completed:false },
+      { id: makeId('td'), course:"ENGL 453", title:"Group Presentation: Registers", description:"Present findings on register variation.", deadline: inDays(6), priority:"High", isEvent:true, completed:false },
+      { id: makeId('td'), course:"ENGL 401", title:"Grammar & Usage Exercises", description:"Pages 45–50.", deadline: inHours(-8), priority:"Low", isEvent:false, completed:true },
+    ],
+    quickLinks: [
+      { id: makeId('ql'), name:"Special Topics in English Across Professions", url:"https://drive.google.com/" },
+      { id: makeId('ql'), name:"Practicum 1: On-Campus Practicum", url:"https://drive.google.com/" },
+      { id: makeId('ql'), name:"Instructional Materials Dev. and Evaluation", url:"https://drive.google.com/" },
+      { id: makeId('ql'), name:"Registers in English", url:"https://drive.google.com/" },
+    ],
+  };
+}
+
+let state = defaultState();
+
+/* =========================================================================
+   STORAGE — shared, so every visitor of this artifact sees the same board
+   ========================================================================= */
+const SKEY = "abels_board_v1";
+async function loadState(){
+  try{
+    const res = await window.storage.get(SKEY, true);
+    if (res && res.value){
+      const parsed = JSON.parse(res.value);
+      state = Object.assign(defaultState(), parsed);
+      return;
+    }
+  }catch(e){ /* key doesn't exist yet — seed defaults below */ }
+  state = defaultState();
+  await persist();
+}
+async function persist(){
+  try{
+    await window.storage.set(SKEY, JSON.stringify(state), true);
+  }catch(e){
+    console.error('Storage save failed', e);
+    showToast('Could not save — check connection', false);
+  }
+}
+
+/* =========================================================================
+   DEADLINE STATUS
+   green  >= 2 days away
+   orange  5h .. 2 days away
+   red     0 .. 5h away
+   overdue past due
+   ========================================================================= */
+function getDeadlineStatus(iso){
+  const now = phOffsetNow();
+  const due = new Date(iso);
+  const diffMs = due - now;
+  const H = 3600*1000, D = 24*H;
+  if (diffMs <= 0){
+    return { key:'overdue', label:'TASK IS OVERDUE', cellClass:'bg-red-50 text-red-700 border-red-200', dotClass:'bg-red-600', pillClass:'bg-red-600 text-white' };
+  }
+  if (diffMs <= 5*H){
+    return { key:'red', label: countdownText(diffMs), cellClass:'bg-red-50 text-red-700 border-red-200', dotClass:'bg-red-500', pillClass:'bg-red-100 text-red-700' };
+  }
+  if (diffMs <= 2*D){
+    return { key:'orange', label: countdownText(diffMs), cellClass:'bg-amber-50 text-amber-700 border-amber-200', dotClass:'bg-amber-500', pillClass:'bg-amber-100 text-amber-700' };
+  }
+  return { key:'green', label: countdownText(diffMs), cellClass:'bg-emerald-50 text-emerald-700 border-emerald-200', dotClass:'bg-emerald-500', pillClass:'bg-emerald-100 text-emerald-700' };
+}
+function countdownText(diffMs){
+  const H = 3600*1000, D=24*H;
+  if (diffMs >= D){
+    const d = Math.floor(diffMs/D);
+    const h = Math.floor((diffMs%D)/H);
+    return `Due in ${d}d${h>0?' '+h+'h':''}`;
+  }
+  const h = Math.floor(diffMs/H);
+  const m = Math.floor((diffMs%H)/(60*1000));
+  if (h > 0) return `Due in ${h}h ${m}m`;
+  return `Due in ${m}m`;
+}
+
+/* =========================================================================
+   MISC HELPERS
+   ========================================================================= */
+function escapeHtml(str){
+  return String(str ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function courseTitle(code){
+  const c = COURSES.find(c => c.code === code);
+  return c ? c.title : code;
+}
+let toastTimer = null;
+function showToast(msg, ok=true){
+  const t = document.getElementById('toast');
+  const icoSlot = document.getElementById('icon-slot-toast');
+  document.getElementById('toast-msg').textContent = msg;
+  icoSlot.innerHTML = ok ? ICON.checkCircle : ICON.info;
+  icoSlot.className = 'w-4 h-4 ' + (ok ? 'text-emerald-400' : 'text-amber-400');
+  t.classList.remove('hidden');
+  t.classList.add('pop-in');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.add('hidden'), 2600);
+}
+
+const NAV_ITEMS = [
+  { id:'home', label:'Home', icon:'home' },
+  { id:'schedule', label:'Schedule', icon:'calendar' },
+  { id:'todo', label:'To-Do List', icon:'checklist' },
+  { id:'professors', label:'Professors', icon:'professor' },
+  { id:'announcements', label:'Announcements', icon:'megaphone' },
+];
+
+function renderSidebarNav(){
+  const nav = document.getElementById('sidebar-nav');
+  nav.innerHTML = NAV_ITEMS.map(item => {
+    const active = currentPage === item.id;
+    return `<a href="#" data-nav="${item.id}" class="nav-link flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition ${active ? 'bg-brandLight text-brand font-semibold' : 'text-gray-600 hover:bg-gray-50'}">
+      <span class="w-5 h-5 shrink-0">${ICON[item.icon]}</span>
+      <span>${item.label}</span>
+    </a>`;
+  }).join('');
+  nav.querySelectorAll('[data-nav]').forEach(a => a.addEventListener('click', (e) => {
+    e.preventDefault();
+    showPage(a.dataset.nav);
+  }));
+}
+
+function renderMobileNav(){
+  const wrap = document.getElementById('mobile-nav-items');
+  wrap.innerHTML = NAV_ITEMS.map(item => {
+    const active = currentPage === item.id;
+    return `<a href="#" data-nav="${item.id}" class="nav-link flex flex-col items-center justify-center py-2.5 gap-0.5 ${active ? 'text-brand' : 'text-gray-500'}">
+      <span class="w-5 h-5">${ICON[item.icon]}</span>
+      <span class="font-medium leading-none">${item.label === 'To-Do List' ? 'To-Do' : item.label}</span>
+    </a>`;
+  }).join('');
+  wrap.querySelectorAll('[data-nav]').forEach(a => a.addEventListener('click', (e) => {
+    e.preventDefault();
+    showPage(a.dataset.nav);
+  }));
+}
+
+function showPage(pageId){
+  currentPage = pageId;
+  document.querySelectorAll('.page-panel').forEach(p => p.classList.add('hidden'));
+  const panel = document.getElementById('page-' + pageId);
+  panel.classList.remove('hidden');
+  panel.classList.add('fade-in');
+  renderSidebarNav();
+  renderMobileNav();
+  renderPage(pageId);
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+function renderPage(pageId){
+  if (pageId === 'home') renderHome();
+  else if (pageId === 'schedule') renderSchedulePage();
+  else if (pageId === 'todo') renderTodoPage();
+  else if (pageId === 'professors') renderProfessorsPage();
+  else if (pageId === 'announcements') renderAnnouncementsPage();
+}
+
+function renderAll(){
+  renderSidebarNav();
+  renderMobileNav();
+  renderAdminUI();
+  renderPage(currentPage);
+}
+
+/* =========================================================================
+   SCHEDULE MATH
+   ========================================================================= */
+function nextClassOccurrence(){
+  const np = phNowParts();
+  let best = null;
+  state.schedule.forEach(cls => {
+    let delta = (cls.day - np.weekday + 7) % 7;
+    if (delta === 0){
+      const [sh, sm] = cls.start.split(':').map(Number);
+      const passedToday = (np.hh > sh) || (np.hh === sh && np.mm >= sm);
+      if (passedToday) delta = 7;
+    }
+    const base = new Date(Date.UTC(np.y, np.m-1, np.d));
+    base.setUTCDate(base.getUTCDate() + delta);
+    const dateStr = `${base.getUTCFullYear()}-${pad2(base.getUTCMonth()+1)}-${pad2(base.getUTCDate())}`;
+    const iso = phDateTimeToISO(dateStr, cls.start);
+    const dateObj = new Date(iso);
+    if (!best || dateObj < best.dateObj){
+      best = { cls, iso, dateObj, isToday: delta === 0, isTomorrow: delta === 1 };
+    }
+  });
+  return best;
+}
+
+/* =========================================================================
+   COLOR HELPERS (for the announcement's custom background)
+   ========================================================================= */
+function relLuminance(hex){
+  const c = (hex||'#FFFFFF').replace('#','');
+  if (c.length !== 6) return 1;
+  const r = parseInt(c.substr(0,2),16)/255, g=parseInt(c.substr(2,2),16)/255, b=parseInt(c.substr(4,2),16)/255;
+  const lin = v => v<=0.03928? v/12.92 : Math.pow((v+0.055)/1.055,2.4);
+  return 0.2126*lin(r)+0.7152*lin(g)+0.0722*lin(b);
+}
+function textColorFor(bgHex){
+  try{ return relLuminance(bgHex) > 0.55 ? '#2B1218' : '#FFFFFF'; }catch(e){ return '#2B1218'; }
+}
+function subtleTextColorFor(bgHex){
+  return relLuminance(bgHex) > 0.55 ? 'rgba(43,18,24,0.65)' : 'rgba(255,255,255,0.78)';
+}
+
+/* =========================================================================
+   HOME PAGE
+   ========================================================================= */
+function renderHome(){
+  const el = document.getElementById('page-home');
+  el.innerHTML = `
+    ${buildBanner()}
+    <div class="mt-6">${buildAnnouncementCard()}</div>
+    <div class="mt-6">${buildStatusCards()}</div>
+    <div class="mt-6">${buildTodoSection(true)}</div>
+    <div class="mt-6">${buildUpcomingEventsSection()}</div>
+    <div class="mt-6">${buildQuickLinksSection()}</div>
+  `;
+  wireHomeEvents();
+}
+
+function buildBanner(){
+  return `
+  <section class="relative overflow-hidden rounded-[1.75rem] bg-gradient-to-br from-brand via-brand to-brandDeep text-white p-6 lg:p-8 shadow-card">
+    <div class="absolute -right-6 -top-10 w-56 h-56 opacity-[0.14] pointer-events-none hidden sm:block">${ICON.book}</div>
+    <div class="absolute right-16 bottom-[-3rem] w-28 h-28 opacity-[0.10] pointer-events-none hidden lg:block">${ICON.sparkle}</div>
+    <div class="relative flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5">
+      <div>
+        <h2 class="text-3xl lg:text-4xl font-bold tracking-tight">Hello there!</h2>
+        <p class="text-white/85 text-base lg:text-lg mt-1 italic">Here's what's new and what's next.</p>
+        <div class="mt-4 inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm rounded-full pl-3 pr-4 py-1.5 text-sm">
+          <span class="w-4 h-4">${ICON.clock}</span>
+          <span id="live-clock" class="font-medium tabular-nums"></span>
         </div>
       </div>
-    </aside>
-
-    <!-- Main -->
-    <main class="flex-1 p-4 lg:p-8 max-w-7xl mx-auto w-full pb-24">
-
-      <!-- Header Banner -->
-      <section class="bg-gradient-to-r from-[#F8EDEF] via-[#F6E7EA] to-[#F9F1F3] border border-borderSoft rounded-[2rem] p-6 lg:p-8 mb-6">
-        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-          <div>
-            <h2 class="text-3xl lg:text-4xl font-bold text-roseBrand">Hello there!</h2>
-            <p class="text-lg text-gray-700 mt-1">Here’s what’s new and what’s next</p>
-          </div>
-
-          <a href="admin.html" class="inline-flex items-center justify-center gap-2 bg-roseBrand text-white px-5 py-3 rounded-xl font-semibold hover:opacity-90 transition">
-            + Create Update
-          </a>
-        </div>
-      </section>
-
-      <!-- Announcement -->
-      <section id="announcements" class="bg-white rounded-[2rem] border border-borderSoft p-6 lg:p-8 shadow-sm">
-
-        <div class="flex items-center justify-between flex-wrap gap-3 mb-6">
-          <div class="flex items-center gap-3">
-
-            <div class="w-12 h-12 rounded-xl bg-roseLight flex items-center justify-center">
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-roseBrand" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.4-1.4A2 2 0 0118 14.2V11a6 6 0 10-12 0v3.2c0 .5-.2 1-.6 1.4L4 17h5m6 0a3 3 0 11-6 0m6 0H9"/>
-              </svg>
-            </div>
-
-            <h3 class="text-2xl font-bold uppercase text-roseBrand">Main Announcement</h3>
-          </div>
-
-          <span id="phTime" class="text-sm text-gray-500"></span>
-        </div>
-
-        <h4 class="text-3xl lg:text-4xl font-bold leading-tight mb-4">
-          WE HAVE NO CLASSES TODAY!
-        </h4>
-
-        <p class="text-lg leading-8 text-gray-800">
-          Take this time to catch up on your tasks and prepare for the week ahead.
-          Stay productive, everyone!
-        </p>
-
-        <div class="mt-8 text-right">
-          <p>Yours Truly,</p>
-          <p class="font-semibold">Karl Lexter</p>
-        </div>
-      </section>
-
-      <!-- Quick Links -->
-      <section class="bg-white rounded-[2rem] border border-borderSoft p-5 lg:p-6 shadow-sm mt-6 mb-16">
-
-        <div class="flex items-center justify-between mb-5">
-          <h3 class="text-2xl font-bold text-roseBrand">Quick Links</h3>
-
-          <div class="flex items-center gap-3">
-            <button onclick="openLinkModal()" class="px-3 py-2 rounded-xl bg-roseBrand text-white text-sm font-semibold hover:opacity-90">
-              + Add Link
-            </button>
-
-            <button onclick="toggleAllLinks()" class="text-sm font-semibold text-roseBrand underline">
-              See all
-            </button>
-          </div>
-        </div>
-
-        <div id="quickLinks" class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm">
-
-          <a href="https://drive.google.com" target="_blank" class="flex flex-col gap-2 p-4 rounded-2xl border border-borderSoft hover:bg-roseSoft transition">
-            <div class="w-10 h-10 rounded-xl bg-roseLight flex items-center justify-center text-roseBrand font-bold">+</div>
-            <span class="font-medium">Special Topics in English</span>
-            <span class="text-xs text-gray-500 break-all">drive.google.com</span>
-          </a>
-
-          <a href="https://drive.google.com" target="_blank" class="flex flex-col gap-2 p-4 rounded-2xl border border-borderSoft hover:bg-roseSoft transition">
-            <div class="w-10 h-10 rounded-xl bg-roseLight flex items-center justify-center text-roseBrand font-bold">+</div>
-            <span class="font-medium">Practicum 1</span>
-            <span class="text-xs text-gray-500 break-all">drive.google.com</span>
-          </a>
-
-        </div>
-
-        <div id="allLinksDrawer" class="hidden mt-6 border-t border-borderSoft pt-4 space-y-2 text-sm">
-
-          <a href="https://drive.google.com" target="_blank" class="block p-3 rounded-xl hover:bg-roseSoft">
-            Special Topics in English Across Professions
-          </a>
-
-          <a href="https://drive.google.com" target="_blank" class="block p-3 rounded-xl hover:bg-roseSoft">
-            Practicum 1: On-Campus Practicum
-          </a>
-
-        </div>
-      </section>
-
-    </main>
-  </div>
-
-  <!-- Add Link Modal -->
-  <div id="linkModal" class="hidden fixed inset-0 bg-black/40 flex items-center justify-center p-4 z-50">
-
-    <div class="bg-white rounded-3xl w-full max-w-md p-6">
-
-      <div class="flex items-center justify-between mb-4">
-        <h4 class="text-xl font-bold text-roseBrand">Add Quick Link</h4>
-        <button onclick="closeLinkModal()" class="text-gray-400 hover:text-gray-600">✕</button>
-      </div>
-
-      <div class="space-y-3">
-        <input id="linkName" type="text" placeholder="Link name" class="w-full border border-borderSoft rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-roseBrand/30">
-
-        <input id="linkUrl" type="url" placeholder="https://example.com" class="w-full border border-borderSoft rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-roseBrand/30">
-      </div>
-
-      <div class="flex justify-end gap-3 mt-6">
-        <button onclick="closeLinkModal()" class="px-4 py-2 rounded-xl border border-borderSoft">Cancel</button>
-
-        <button onclick="addQuickLink()" class="px-4 py-2 rounded-xl bg-roseBrand text-white font-semibold">
-          Add Link
+      <div class="flex sm:items-center gap-3">
+        <button id="btn-create-update" class="inline-flex items-center gap-2 bg-white text-brand px-5 py-3 rounded-xl text-sm font-semibold shadow-sm hover:bg-brandLight transition">
+          <span class="w-4 h-4">${ICON.plus}</span> Create Update
         </button>
       </div>
     </div>
-  </div>
+  </section>`;
+}
 
-  <script>
-    // Loader
-    window.addEventListener('load', () => {
-      setTimeout(() => {
-        document.getElementById('loader').classList.add('hidden');
-        document.getElementById('app').classList.remove('hidden');
-      }, 1200);
-    });
+function buildAnnouncementCard(){
+  const a = state.announcements[0];
+  if (!a){
+    return `<section class="bg-white border-2 border-dashed border-brandSoft rounded-[1.75rem] p-8 text-center text-gray-500">
+      <div class="w-12 h-12 rounded-2xl bg-brandLight text-brand flex items-center justify-center mx-auto mb-3">${ICON.megaphone}</div>
+      <p class="font-medium">No announcements yet.</p>
+      <p class="text-sm mt-1">Once the president posts an update, it'll show up here.</p>
+    </section>`;
+  }
+  const textColor = textColorFor(a.bg);
+  const subColor = subtleTextColorFor(a.bg);
+  return `
+  <section class="rounded-[1.75rem] p-6 lg:p-8 shadow-card border border-brandSoft/60" style="background:${a.bg}; color:${textColor}">
+    <div class="flex items-center justify-between flex-wrap gap-3 mb-6">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style="background:${textColor === '#FFFFFF' ? 'rgba(255,255,255,0.18)' : 'rgba(174,28,76,0.1)'}; color:${textColor}">${ICON.megaphone}</div>
+        <span class="text-xl lg:text-2xl font-bold uppercase tracking-tight">Announcement</span>
+      </div>
+      <span class="text-sm font-medium" style="color:${subColor}">Posted ${fmtDateTimePH(new Date(a.postedAt))}</span>
+    </div>
+    <h3 class="text-3xl lg:text-4xl font-bold leading-tight mb-4">${escapeHtml(a.title)}</h3>
+    <div class="text-base lg:text-lg leading-8 max-w-3xl rte" style="color:${textColor}">${a.bodyHtml}</div>
+    <div class="mt-8 text-right text-lg leading-tight" style="color:${subColor}">
+      <p>Yours Truly,</p>
+      <p class="font-semibold" style="color:${textColor}">Karl Lexter</p>
+    </div>
+  </section>`;
+}
 
-    // Philippine Time
-    function updatePHTime() {
-      const now = new Date();
+function buildStatusCards(){
+  const next = nextClassOccurrence();
+  const urgentCount = state.todos.filter(t => !t.completed && ['red','orange','overdue'].includes(getDeadlineStatus(t.deadline).key)).length;
 
-      const options = {
-        timeZone: 'Asia/Manila',
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: 'numeric',
-        minute: '2-digit'
-      };
+  let nextLabel = '—', nextSub = 'No classes scheduled';
+  if (next){
+    nextLabel = next.isToday ? 'Today' : next.isTomorrow ? 'Tomorrow' : DAY_NAMES[next.cls.day];
+    nextSub = `${fmtDatePH(next.dateObj)} · ${to12h(...next.cls.start.split(':'))}`;
+  }
+  const modality = next ? next.cls.modality : '—';
+  const modIcon = modality === 'Online' ? 'laptop' : 'building';
+  const modColor = modality === 'Online' ? 'text-sky-700 bg-sky-100' : modality === 'Hybrid' ? 'text-violet-700 bg-violet-100' : 'text-emerald-700 bg-emerald-100';
 
-      document.getElementById('phTime').textContent =
-        new Intl.DateTimeFormat('en-PH', options).format(now);
-    }
+  return `
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div class="bg-white rounded-2xl border border-brandSoft/70 p-5 shadow-card flex items-start gap-4">
+      <div class="w-12 h-12 rounded-2xl bg-brandLight text-brand flex items-center justify-center shrink-0">${ICON.calendar}</div>
+      <div class="min-w-0">
+        <p class="text-xs font-semibold tracking-wide text-gray-500 uppercase">Next Class</p>
+        <p class="text-lg font-bold mt-1">${nextLabel}</p>
+        <p class="text-sm text-gray-500 mt-0.5">${nextSub}</p>
+      </div>
+    </div>
+    <div class="bg-white rounded-2xl border border-brandSoft/70 p-5 shadow-card flex items-start gap-4">
+      <div class="w-12 h-12 rounded-2xl ${modColor} flex items-center justify-center shrink-0">${ICON[modIcon]}</div>
+      <div class="min-w-0">
+        <p class="text-xs font-semibold tracking-wide text-gray-500 uppercase">Modality</p>
+        <p class="text-lg font-bold mt-1">${modality}</p>
+        <p class="text-sm text-gray-500 mt-0.5">${next ? (next.cls.code) : 'All Day'}</p>
+      </div>
+    </div>
+    <button data-nav-target="todo" class="text-left bg-white rounded-2xl border border-brandSoft/70 p-5 shadow-card flex items-start gap-4 hover:border-brand/40 transition">
+      <div class="w-12 h-12 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center shrink-0">${ICON.checklist}</div>
+      <div class="min-w-0">
+        <p class="text-xs font-semibold tracking-wide text-gray-500 uppercase">Urgent Tasks</p>
+        <p class="text-lg font-bold text-amber-700 mt-1">${urgentCount} Due Soon</p>
+        <span class="text-sm text-gray-500 hover:text-brand mt-0.5 inline-block">View to-do list →</span>
+      </div>
+    </button>
+  </div>`;
+}
 
-    updatePHTime();
-    setInterval(updatePHTime, 60000);
+/* =========================================================================
+   TO-DO LIST — shared table builder (used on Home preview + full To-Do page)
+   ========================================================================= */
+const STATUS_RANK = { overdue:0, red:1, orange:2, green:3 };
+function sortedTodos(list){
+  return [...list].sort((a,b) => {
+    if (a.completed !== b.completed) return a.completed ? 1 : -1;
+    const ra = STATUS_RANK[getDeadlineStatus(a.deadline).key];
+    const rb = STATUS_RANK[getDeadlineStatus(b.deadline).key];
+    if (ra !== rb) return ra - rb;
+    return new Date(a.deadline) - new Date(b.deadline);
+  });
+}
 
-    // Quick Links
-    function toggleAllLinks() {
-      document.getElementById('allLinksDrawer').classList.toggle('hidden');
-    }
+function filterTodos(list, filter){
+  return list.filter(t => {
+    const st = getDeadlineStatus(t.deadline).key;
+    if (filter === 'pending') return !t.completed;
+    if (filter === 'duesoon') return !t.completed && (st === 'red' || st === 'orange');
+    if (filter === 'overdue') return !t.completed && st === 'overdue';
+    if (filter === 'completed') return t.completed;
+    return true; // all
+  });
+}
 
-    function openLinkModal() {
-      document.getElementById('linkModal').classList.remove('hidden');
-    }
+function todoRowHtml(t, showActions){
+  const st = getDeadlineStatus(t.deadline);
+  const due = new Date(t.deadline);
+  const overdue = st.key === 'overdue';
+  return `
+  <tr class="border-b border-gray-100 last:border-0 align-top ${t.completed ? 'opacity-60' : ''}">
+    <td class="py-3.5 pr-3">
+      <div class="flex items-center gap-2">
+        <span class="w-2.5 h-2.5 rounded-full shrink-0 ${COURSE_DOT[t.course]||'bg-gray-400'}"></span>
+        <span class="text-sm font-semibold whitespace-nowrap">${escapeHtml(t.course)}</span>
+      </div>
+    </td>
+    <td class="py-3.5 pr-3 min-w-[10rem]">
+      <p class="font-semibold text-gray-900 ${t.completed?'line-through':''}">${escapeHtml(t.title)}</p>
+      ${t.description ? `<p class="text-sm text-gray-500 mt-0.5">${escapeHtml(t.description)}</p>` : ''}
+      ${t.isEvent ? `<span class="inline-flex items-center gap-1 mt-1 text-[11px] font-semibold text-brand bg-brandLight px-2 py-0.5 rounded-full">${ICON.megaphone.replace('viewBox="0 0 24 24"','viewBox="0 0 24 24" style="width:11px;height:11px"')} Event</span>` : ''}
+    </td>
+    <td class="py-3.5 pr-3 text-sm text-gray-600 whitespace-nowrap">
+      ${fmtDatePH(due)}<br><span class="text-gray-400">${fmtTimePH(due)}</span>
+    </td>
+    <td class="py-3.5 pr-3">
+      <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold border ${st.cellClass} ${overdue?'animate-pulse':''}">${t.completed ? 'Completed' : st.label}</span>
+    </td>
+    ${showActions ? `
+    <td class="py-3.5 pl-1 text-right whitespace-nowrap">
+      <button data-todo-complete="${t.id}" title="${t.completed?'Mark as pending':'Mark as completed'}" class="w-8 h-8 inline-flex items-center justify-center rounded-lg hover:bg-gray-100 text-gray-500 ${t.completed?'text-emerald-600':''}">${ICON.checkCircle}</button>
+      <button data-todo-delete="${t.id}" title="Delete task" class="w-8 h-8 inline-flex items-center justify-center rounded-lg hover:bg-red-50 text-gray-400 hover:text-red-600">${ICON.trash}</button>
+    </td>` : ''}
+  </tr>`;
+}
 
-    function closeLinkModal() {
-      document.getElementById('linkModal').classList.add('hidden');
-    }
+function buildTodoSection(preview){
+  const all = sortedTodos(state.todos);
+  const list = preview ? all.slice(0,5) : filterTodos(all, todoFilter);
+  const showActions = isAdmin && !preview;
 
-    function addQuickLink() {
-      const name = document.getElementById('linkName').value.trim();
-      const url = document.getElementById('linkUrl').value.trim();
+  const tabs = [
+    {k:'all', l:'All'}, {k:'pending', l:'Pending'}, {k:'duesoon', l:'Due Soon'}, {k:'overdue', l:'Overdue'}, {k:'completed', l:'Completed'}
+  ];
 
-      if (!name || !url) {
-        alert('Please enter both name and URL.');
-        return;
+  const tabsHtml = preview ? '' : `
+  <div class="flex gap-2 overflow-x-auto thin-scroll pb-1 mb-5">
+    ${tabs.map(t => `<button data-todo-filter="${t.k}" class="px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition ${todoFilter===t.k ? 'bg-brand text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}">${t.l}</button>`).join('')}
+  </div>`;
+
+  const emptyState = `<div class="text-center py-10 text-gray-400">
+      <div class="w-11 h-11 rounded-2xl bg-gray-50 text-gray-300 flex items-center justify-center mx-auto mb-2">${ICON.checklist}</div>
+      <p class="text-sm">Nothing here yet.</p>
+    </div>`;
+
+  const table = list.length === 0 ? emptyState : `
+  <div class="overflow-x-auto thin-scroll -mx-1">
+    <table class="w-full text-left border-collapse px-1">
+      <thead>
+        <tr class="text-xs uppercase tracking-wide text-gray-400 border-b border-gray-100">
+          <th class="font-semibold py-2 pr-3">Course</th>
+          <th class="font-semibold py-2 pr-3">What to do</th>
+          <th class="font-semibold py-2 pr-3">Deadline</th>
+          <th class="font-semibold py-2 pr-3">Status</th>
+          ${showActions ? '<th></th>' : ''}
+        </tr>
+      </thead>
+      <tbody>${list.map(t => todoRowHtml(t, showActions)).join('')}</tbody>
+    </table>
+  </div>`;
+
+  return `
+  <section class="bg-white rounded-3xl border border-brandSoft/70 p-5 lg:p-6 shadow-card">
+    <div class="flex items-center justify-between mb-4 gap-3">
+      <h3 class="text-xl font-bold flex items-center gap-2"><span class="w-5 h-5 text-brand">${ICON.checklist}</span> To-Do List</h3>
+      ${preview ? `<button data-nav-target="todo" class="text-brand font-semibold text-sm hover:underline">View All</button>` : `<span class="text-xs text-gray-400">Philippine Time (UTC+8)</span>`}
+    </div>
+    ${tabsHtml}
+    ${table}
+  </section>`;
+}
+
+function wireTodoEvents(root){
+  root.querySelectorAll('[data-todo-filter]').forEach(b => b.addEventListener('click', () => {
+    todoFilter = b.dataset.todoFilter;
+    renderPage(currentPage);
+  }));
+  root.querySelectorAll('[data-todo-complete]').forEach(b => b.addEventListener('click', async () => {
+    const t = state.todos.find(x => x.id === b.dataset.todoComplete);
+    if (!t) return;
+    t.completed = !t.completed;
+    await persist();
+    renderPage(currentPage);
+    showToast(t.completed ? 'Task marked completed' : 'Task marked pending');
+  }));
+  root.querySelectorAll('[data-todo-delete]').forEach(b => b.addEventListener('click', () => {
+    const id = b.dataset.todoDelete;
+    openConfirmModal({
+      title: 'Delete this task?',
+      message: 'This cannot be undone.',
+      confirmLabel: 'Delete',
+      danger: true,
+      onConfirm: async () => {
+        state.todos = state.todos.filter(x => x.id !== id);
+        await persist();
+        renderAll();
+        showToast('Task deleted');
       }
+    });
+  }));
+}
 
-      const container = document.getElementById('quickLinks');
+/* =========================================================================
+   UPCOMING EVENTS
+   ========================================================================= */
+function buildUpcomingEventsSection(){
+  const events = [];
+  const next = nextClassOccurrence();
+  if (next){
+    events.push({
+      kind:'class', dateObj: next.dateObj,
+      title: next.cls.modality + ' Classes', sub: next.cls.code + ' · ' + to12h(...next.cls.start.split(':')),
+      tag: next.cls.modality, tagClass:'bg-brandLight text-brand'
+    });
+  }
+  state.todos.filter(t => t.isEvent && !t.completed).forEach(t => {
+    events.push({
+      kind:'todo', dateObj: new Date(t.deadline),
+      title: t.title, sub: t.course,
+      tag:'Due', tagClass:'bg-purple-100 text-purple-700'
+    });
+  });
+  events.sort((a,b) => a.dateObj - b.dateObj);
+  const top = events.slice(0,4);
 
-      const card = document.createElement('a');
-      card.href = url;
-      card.target = '_blank';
-      card.className =
-        'flex flex-col gap-2 p-4 rounded-2xl border border-borderSoft hover:bg-roseSoft transition';
+  const rows = top.map(e => `
+    <div class="flex items-center justify-between gap-4 py-3.5 border-b border-gray-100 last:border-0">
+      <div class="flex items-center gap-4 min-w-0">
+        <div class="w-14 h-14 rounded-2xl bg-brandLight flex flex-col items-center justify-center border border-brandSoft shrink-0">
+          <span class="text-[10px] font-bold text-brand uppercase">${e.dateObj.toLocaleDateString('en-US',{timeZone:'Asia/Manila',month:'short'})}</span>
+          <span class="text-lg font-bold text-brand leading-none">${e.dateObj.toLocaleDateString('en-US',{timeZone:'Asia/Manila',day:'2-digit'})}</span>
+        </div>
+        <div class="min-w-0">
+          <p class="font-semibold text-gray-900 truncate">${escapeHtml(e.title)}</p>
+          <p class="text-sm text-gray-500 truncate">${escapeHtml(e.sub)}</p>
+        </div>
+      </div>
+      <span class="px-3 py-1 rounded-full text-xs font-semibold shrink-0 ${e.tagClass}">${escapeHtml(e.tag)}</span>
+    </div>`).join('');
 
-      card.innerHTML = `
-        <div class="w-10 h-10 rounded-xl bg-roseLight flex items-center justify-center text-roseBrand font-bold">+</div>
-        <span class="font-medium">${name}</span>
-        <span class="text-xs text-gray-500 break-all">${url}</span>
-      `;
+  return `
+  <section class="bg-white rounded-3xl border border-brandSoft/70 p-5 lg:p-6 shadow-card">
+    <div class="flex items-center justify-between mb-2">
+      <h3 class="text-xl font-bold flex items-center gap-2"><span class="w-5 h-5 text-brand">${ICON.calendar}</span> Upcoming Events</h3>
+      <button data-nav-target="schedule" class="text-brand font-semibold text-sm hover:underline">View Schedule</button>
+    </div>
+    ${top.length ? rows : `<p class="text-sm text-gray-400 py-6 text-center">No upcoming events.</p>`}
+  </section>`;
+}
 
-      container.appendChild(card);
+/* =========================================================================
+   QUICK LINKS
+   ========================================================================= */
+function faviconFor(url){
+  try{
+    const u = new URL(url);
+    return `https://www.google.com/s2/favicons?sz=64&domain=${u.hostname}`;
+  }catch(e){ return null; }
+}
+function quickLinkTile(l, opts){
+  opts = opts || {};
+  const fav = faviconFor(l.url);
+  return `
+  <div class="group relative flex flex-col items-center text-center gap-2.5 p-4 rounded-2xl border border-transparent hover:border-brandSoft hover:bg-brandLight/40 transition">
+    ${opts.deletable ? `<button data-qlink-delete="${l.id}" class="absolute top-1.5 right-1.5 w-6 h-6 rounded-full bg-white border border-gray-200 text-gray-400 hover:text-red-600 hover:border-red-200 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">${ICON.x}</button>` : ''}
+    <a href="${escapeHtml(l.url)}" target="_blank" rel="noopener noreferrer" class="flex flex-col items-center gap-2.5 w-full">
+      <span class="w-11 h-11 rounded-2xl bg-white border border-brandSoft flex items-center justify-center overflow-hidden shrink-0">
+        ${fav ? `<img src="${fav}" alt="" class="w-6 h-6" onerror="this.replaceWith(Object.assign(document.createElement('span'),{innerHTML:ICON.link, className:'w-5 h-5 text-brand'}))">` : `<span class="w-5 h-5 text-brand">${ICON.link}</span>`}
+      </span>
+      <span class="font-medium text-gray-700 leading-tight text-sm line-clamp-2">${escapeHtml(l.name)}</span>
+      <span class="text-[11px] text-gray-400 truncate max-w-[10rem]">${escapeHtml(l.url.replace(/^https?:\/\//,''))}</span>
+    </a>
+  </div>`;
+}
+function addLinkTile(){
+  return `
+  <button id="btn-add-qlink" class="flex flex-col items-center justify-center text-center gap-2.5 p-4 rounded-2xl border-2 border-dashed border-brandSoft text-brand hover:bg-brandLight/50 transition">
+    <span class="w-11 h-11 rounded-2xl bg-brandLight flex items-center justify-center"><span class="w-5 h-5">${ICON.plus}</span></span>
+    <span class="font-medium text-sm">Add Shortcut</span>
+  </button>`;
+}
 
-      document.getElementById('linkName').value = '';
-      document.getElementById('linkUrl').value = '';
+function buildQuickLinksSection(){
+  const links = state.quickLinks.slice(0,7);
+  return `
+  <section class="bg-white rounded-3xl border border-brandSoft/70 p-5 lg:p-6 shadow-card">
+    <div class="flex items-center justify-between mb-5">
+      <h3 class="text-xl font-bold flex items-center gap-2"><span class="w-5 h-5 text-brand">${ICON.link}</span> Quick Links</h3>
+      <button id="btn-qlinks-seeall" class="text-brand font-semibold text-sm hover:underline">See all</button>
+    </div>
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-sm">
+      ${links.map(l => quickLinkTile(l)).join('')}
+      ${isAdmin ? addLinkTile() : ''}
+    </div>
+    ${!isAdmin ? `<p class="text-xs text-gray-400 mt-4 flex items-center gap-1.5">${icon('shield','w-3.5 h-3.5')} Unlock admin access to add or remove shortcuts.</p>` : ''}
+  </section>`;
+}
 
-      closeLinkModal();
+function wireQuickLinksEvents(root){
+  const seeAll = root.querySelector('#btn-qlinks-seeall');
+  if (seeAll) seeAll.addEventListener('click', openQuickLinksModal);
+  const addBtn = root.querySelector('#btn-add-qlink');
+  if (addBtn) addBtn.addEventListener('click', () => openAddLinkModal());
+  root.querySelectorAll('[data-qlink-delete]').forEach(b => b.addEventListener('click', (e) => {
+    e.preventDefault();
+    const id = b.dataset.qlinkDelete;
+    openConfirmModal({
+      title: 'Remove this shortcut?',
+      confirmLabel: 'Remove',
+      danger: true,
+      onConfirm: async () => {
+        state.quickLinks = state.quickLinks.filter(x => x.id !== id);
+        await persist();
+        renderAll();
+        if (document.getElementById('modal-qlinks-all')) openQuickLinksModal();
+        showToast('Shortcut removed');
+      }
+    });
+  }));
+}
+
+function openQuickLinksModal(){
+  const html = `
+  <div id="modal-qlinks-all" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
+    <div class="absolute inset-0 bg-ink/40 backdrop-blur-[2px]" data-close-modal></div>
+    <div class="relative bg-white w-full sm:max-w-2xl rounded-t-3xl sm:rounded-3xl shadow-2xl pop-in max-h-[85vh] flex flex-col">
+      <div class="flex items-center justify-between p-5 border-b border-gray-100">
+        <h3 class="text-lg font-bold flex items-center gap-2"><span class="w-5 h-5 text-brand">${ICON.link}</span> All Quick Links</h3>
+        <div class="flex items-center gap-2">
+          ${isAdmin ? `<button id="btn-add-qlink-modal" class="inline-flex items-center gap-1.5 bg-brand text-white text-sm font-semibold px-3.5 py-2 rounded-xl hover:bg-brandDark"><span class="w-4 h-4">${ICON.plus}</span>Add</button>` : ''}
+          <button data-close-modal class="w-9 h-9 rounded-full hover:bg-gray-100 flex items-center justify-center text-gray-500">${ICON.x}</button>
+        </div>
+      </div>
+      <div class="p-5 overflow-y-auto thin-scroll">
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+          ${state.quickLinks.map(l => quickLinkTile(l, {deletable:isAdmin})).join('') || `<p class="col-span-full text-center text-gray-400 py-8 text-sm">No shortcuts yet.</p>`}
+        </div>
+      </div>
+    </div>
+  </div>`;
+  renderModal(html);
+  wireQuickLinksEvents(document.getElementById('modal-qlinks-all'));
+  const addBtn = document.getElementById('btn-add-qlink-modal');
+  if (addBtn) addBtn.addEventListener('click', () => openAddLinkModal(true));
+}
+
+function openAddLinkModal(fromAll){
+  const html = `
+  <div id="modal-add-link" class="fixed inset-0 z-[60] flex items-end sm:items-center justify-center p-0 sm:p-4">
+    <div class="absolute inset-0 bg-ink/40" data-close-modal></div>
+    <div class="relative bg-white w-full sm:max-w-md rounded-t-3xl sm:rounded-3xl shadow-2xl pop-in">
+      <div class="flex items-center justify-between p-5 border-b border-gray-100">
+        <h3 class="text-lg font-bold">Add Shortcut</h3>
+        <button data-close-modal class="w-9 h-9 rounded-full hover:bg-gray-100 flex items-center justify-center text-gray-500">${ICON.x}</button>
+      </div>
+      <div class="p-5 space-y-4">
+        <div>
+          <label class="text-sm font-semibold text-gray-700">Name</label>
+          <input id="qlink-name" type="text" placeholder="e.g. Class Google Drive" class="mt-1.5 w-full border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm focus:border-brand" />
+        </div>
+        <div>
+          <label class="text-sm font-semibold text-gray-700">URL</label>
+          <input id="qlink-url" type="url" placeholder="https://drive.google.com/..." class="mt-1.5 w-full border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm focus:border-brand" />
+          <p id="qlink-url-err" class="text-xs text-red-600 mt-1 hidden">Enter a valid URL starting with http:// or https://</p>
+        </div>
+      </div>
+      <div class="flex items-center justify-end gap-2 p-5 border-t border-gray-100">
+        <button data-close-modal class="px-4 py-2.5 rounded-xl text-sm font-semibold text-gray-600 hover:bg-gray-100">Cancel</button>
+        <button id="btn-save-qlink" class="px-4 py-2.5 rounded-xl text-sm font-semibold bg-brand text-white hover:bg-brandDark">Save Shortcut</button>
+      </div>
+    </div>
+  </div>`;
+  renderModal(html, true);
+  document.getElementById('btn-save-qlink').addEventListener('click', async () => {
+    const name = document.getElementById('qlink-name').value.trim();
+    let url = document.getElementById('qlink-url').value.trim();
+    const errEl = document.getElementById('qlink-url-err');
+    if (url && !/^https?:\/\//i.test(url)) url = 'https://' + url;
+    if (!name || !/^https?:\/\/.+\..+/.test(url)){
+      errEl.classList.remove('hidden');
+      return;
     }
-  </script>
+    state.quickLinks.push({ id: makeId('ql'), name, url });
+    await persist();
+    closeTopModal();
+    if (fromAll){ renderAll(); openQuickLinksModal(); } else { renderAll(); }
+    showToast('Shortcut added');
+  });
+}
 
-</body>
-</html>
+/* =========================================================================
+   MODAL STACK UTILITIES
+   ========================================================================= */
+let modalStack = [];
+function renderModal(html, stacked){
+  const root = document.getElementById('modal-root');
+  if (!stacked){ root.innerHTML = ''; modalStack = []; }
+  const wrapper = document.createElement('div');
+  wrapper.innerHTML = html.trim();
+  const node = wrapper.firstElementChild;
+  root.appendChild(node);
+  modalStack.push(node);
+  wireModalCommon(node);
+  return node;
+}
+function wireModalCommon(node){
+  node.querySelectorAll('[data-close-modal]').forEach(b => b.addEventListener('click', () => {
+    if (node.parentNode) node.parentNode.removeChild(node);
+    modalStack = modalStack.filter(n => n !== node);
+  }));
+}
+function closeTopModal(){
+  const node = modalStack.pop();
+  if (node && node.parentNode) node.parentNode.removeChild(node);
+}
+function closeAllModals(){
+  document.getElementById('modal-root').innerHTML = '';
+  modalStack = [];
+}
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && modalStack.length) closeTopModal();
+});
+
+/* =========================================================================
+   ADMIN ACCESS
+   ========================================================================= */
+function renderAdminUI(){
+  document.getElementById('admin-status-label').textContent = isAdmin ? 'President · Admin unlocked' : 'President';
+  document.getElementById('admin-toggle-label').textContent = isAdmin ? 'Log out of admin' : 'Admin access';
+  document.getElementById('icon-slot-lock').innerHTML = isAdmin ? ICON.checkCircle : ICON.shield;
+  document.getElementById('icon-slot-lock-m').innerHTML = isAdmin ? ICON.checkCircle : ICON.shield;
+  const btnM = document.getElementById('btn-admin-toggle-m');
+  btnM.classList.toggle('text-emerald-600', isAdmin);
+  btnM.classList.toggle('bg-emerald-50', isAdmin);
+  btnM.classList.toggle('text-brand', !isAdmin);
+  btnM.classList.toggle('bg-brandLight', !isAdmin);
+  const fab = document.getElementById('fab-create');
+  const mnav = document.getElementById('mobile-nav');
+  fab.classList.remove('hidden');
+  mnav.classList.remove('hidden');
+  document.getElementById('icon-slot-fab').innerHTML = ICON.plus;
+  document.getElementById('icon-slot-brandmark').innerHTML = ICON.book;
+  document.getElementById('icon-slot-brandmark-m').innerHTML = ICON.book;
+}
+
+function handleAdminToggleClick(){
+  if (isAdmin){
+    isAdmin = false;
+    renderAdminUI();
+    renderPage(currentPage);
+    showToast('Admin access locked');
+  } else {
+    openAdminModal();
+  }
+}
+
+function openAdminModal(onSuccess){
+  const html = `
+  <div id="modal-admin" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
+    <div class="absolute inset-0 bg-ink/45 backdrop-blur-[2px]" data-close-modal></div>
+    <div class="relative bg-white w-full sm:max-w-sm rounded-t-3xl sm:rounded-3xl shadow-2xl pop-in p-6 sm:p-7 text-center">
+      <button data-close-modal class="absolute top-4 right-4 w-8 h-8 rounded-full hover:bg-gray-100 flex items-center justify-center text-gray-400">${ICON.x}</button>
+      <div class="w-14 h-14 rounded-2xl bg-brandLight text-brand flex items-center justify-center mx-auto mb-4">
+        <span class="w-7 h-7">${ICON.shield}</span>
+      </div>
+      <h3 class="text-xl font-bold">Admin Access</h3>
+      <p class="text-sm text-gray-500 mt-1">Enter your password to continue</p>
+      <div class="relative mt-5">
+        <input id="admin-pass-input" type="password" placeholder="Enter password" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-center tracking-widest focus:border-brand" />
+        <button id="btn-toggle-pass" type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 w-5 h-5">${ICON.eye}</button>
+      </div>
+      <p id="admin-pass-err" class="text-xs text-red-600 mt-2 hidden">Incorrect password. Try again.</p>
+      <button id="btn-forgot-pass" type="button" class="text-sm text-brand hover:underline mt-3 inline-block">Forgot password?</button>
+      <button id="btn-unlock" class="w-full mt-5 bg-brand text-white font-semibold py-3 rounded-xl hover:bg-brandDark transition">Unlock</button>
+    </div>
+  </div>`;
+  renderModal(html);
+  const input = document.getElementById('admin-pass-input');
+  const errEl = document.getElementById('admin-pass-err');
+  input.focus();
+  let visible = false;
+  document.getElementById('btn-toggle-pass').addEventListener('click', () => {
+    visible = !visible;
+    input.type = visible ? 'text' : 'password';
+    document.getElementById('btn-toggle-pass').innerHTML = visible ? ICON.eyeOff : ICON.eye;
+  });
+  document.getElementById('btn-forgot-pass').addEventListener('click', () => {
+    showToast('Ask the AB ELS 4-5 president for the admin passcode', false);
+  });
+  function tryUnlock(){
+    if (input.value === ADMIN_PASSCODE){
+      isAdmin = true;
+      closeTopModal();
+      renderAdminUI();
+      renderPage(currentPage);
+      showToast('Admin access unlocked');
+      if (typeof onSuccess === 'function') onSuccess();
+    } else {
+      errEl.classList.remove('hidden');
+      input.classList.add('border-red-400');
+      input.value = '';
+      input.focus();
+    }
+  }
+  document.getElementById('btn-unlock').addEventListener('click', tryUnlock);
+  input.addEventListener('keydown', (e) => { if (e.key === 'Enter') tryUnlock(); });
+}
+
+function handleCreateUpdateClick(){
+  if (!isAdmin){
+    openAdminModal(() => openWizardModal());
+  } else {
+    openWizardModal();
+  }
+}
+
+/* =========================================================================
+   HOME EVENT WIRING
+   ========================================================================= */
+function wireHomeEvents(){
+  const root = document.getElementById('page-home');
+  wireTodoEvents(root);
+  wireQuickLinksEvents(root);
+  root.querySelectorAll('[data-nav-target]').forEach(b => b.addEventListener('click', () => showPage(b.dataset.navTarget)));
+  const createBtn = document.getElementById('btn-create-update');
+  if (createBtn) createBtn.addEventListener('click', handleCreateUpdateClick);
+}
+
+/* =========================================================================
+   LIVE CLOCK
+   ========================================================================= */
+function updateLiveClock(){
+  const el = document.getElementById('live-clock');
+  if (!el) return;
+  const now = new Date();
+  const weekday = now.toLocaleDateString('en-US', { timeZone:'Asia/Manila', weekday:'short' });
+  el.textContent = `${weekday}, ${fmtDatePH(now)} · ${now.toLocaleTimeString('en-US',{timeZone:'Asia/Manila', hour:'numeric', minute:'2-digit', second:'2-digit', hour12:true})} PHT`;
+}
+
+/* =========================================================================
+   CREATE UPDATE WIZARD
+   ========================================================================= */
+let wizard = null;
+function todayStr(){
+  const p = phNowParts();
+  return `${p.y}-${pad2(p.m)}-${pad2(p.d)}`;
+}
+function resetWizard(){
+  wizard = {
+    type: null,
+    step: 1,
+    schedule: { title:'', modality:'Face to Face', date: todayStr(), useDefaultTime:'yes', time:'08:00', hasEndTime:'no', endTime:'' },
+    todo: { course: COURSES[0].code, title:'', description:'', date: todayStr(), time:'23:59', priority:'Medium', isEvent:'no', urgent:false },
+    announcement: { title:'', bodyHtml:'', bg:'#FCEBF0' },
+  };
+}
+
+const WIZARD_TYPES = [
+  { key:'schedule', icon:'calendar', title:'Schedule', desc:'Post class schedules, class cancellations, or modality updates.' },
+  { key:'todo', icon:'checklist', title:'To-Do List', desc:'Add tasks, deadlines, and important reminders for the section.' },
+  { key:'announcement', icon:'megaphone', title:'Main Announcement', desc:'Post important announcements for everyone to see.' },
+];
+const TYPE_THEME = {
+  schedule: { bg:'bg-brandLight', text:'text-brand', ring:'ring-brand' },
+  todo: { bg:'bg-amber-50', text:'text-amber-700', ring:'ring-amber-400' },
+  announcement: { bg:'bg-emerald-50', text:'text-emerald-700', ring:'ring-emerald-400' },
+};
+
+function openWizardModal(){
+  resetWizard();
+  renderModal(buildWizardHtml(), false);
+  wireWizard();
+}
+function rerenderWizard(){
+  renderModal(buildWizardHtml(), false);
+  wireWizard();
+}
+
+function stepperHtml(){
+  const steps = [ {n:1,l:'Choose Type'}, {n:2,l:'Details'}, {n:3,l:'Review'} ];
+  return `
+  <div class="flex items-center justify-center sm:justify-start gap-1.5 sm:gap-2 mb-2 flex-wrap">
+    ${steps.map((s, idx) => {
+      const state_ = wizard.step === s.n ? 'active' : wizard.step > s.n ? 'done' : 'todo';
+      const circle = state_ === 'done'
+        ? `<div class="w-7 h-7 rounded-full bg-brand text-white flex items-center justify-center text-xs"><span class="w-3.5 h-3.5">${ICON.check}</span></div>`
+        : state_ === 'active'
+        ? `<div class="w-7 h-7 rounded-full bg-brand text-white flex items-center justify-center text-xs font-bold">${s.n}</div>`
+        : `<div class="w-7 h-7 rounded-full bg-gray-100 text-gray-400 flex items-center justify-center text-xs font-bold">${s.n}</div>`;
+      const label = `<span class="text-xs sm:text-sm font-medium ${state_==='todo' ? 'text-gray-400' : 'text-gray-800'}">${s.l}</span>`;
+      const line = idx < steps.length-1 ? `<div class="w-6 sm:w-14 h-[2px] ${wizard.step > s.n ? 'bg-brand' : 'bg-gray-200'} mx-0.5 sm:mx-2"></div>` : '';
+      return `<div class="flex items-center gap-1.5 sm:gap-2">${circle}${label}</div>${line}`;
+    }).join('')}
+  </div>`;
+}
+
+function buildWizardHtml(){
+  return `
+  <div id="modal-wizard" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
+    <div class="absolute inset-0 bg-ink/45 backdrop-blur-[2px]" data-close-modal></div>
+    <div class="relative bg-white w-full sm:max-w-2xl rounded-t-3xl sm:rounded-3xl shadow-2xl pop-in max-h-[92vh] flex flex-col">
+      <div class="flex items-start justify-between p-5 sm:p-6 pb-3 border-b border-gray-100 shrink-0">
+        <div>
+          <h3 class="text-lg sm:text-xl font-bold">Create New Update</h3>
+        </div>
+        <button data-close-modal class="w-9 h-9 rounded-full hover:bg-gray-100 flex items-center justify-center text-gray-400 shrink-0">${ICON.x}</button>
+      </div>
+      <div class="px-5 sm:px-6 pt-4 shrink-0">${stepperHtml()}</div>
+      <div class="p-5 sm:p-6 pt-3 overflow-y-auto thin-scroll flex-1">
+        ${wizard.step === 1 ? buildStep1() : ''}
+        ${wizard.step === 2 ? buildStep2() : ''}
+        ${wizard.step === 3 ? buildStep3() : ''}
+      </div>
+      <div class="flex items-center justify-between p-5 sm:p-6 pt-4 border-t border-gray-100 shrink-0">
+        ${wizard.step > 1 ? `<button id="wiz-back" class="px-4 sm:px-5 py-2.5 rounded-xl text-sm font-semibold text-gray-600 hover:bg-gray-100 flex items-center gap-1.5"><span class="w-4 h-4">${ICON.chevronLeft}</span>Back</button>` : `<span></span>`}
+        ${wizard.step < 3
+          ? `<button id="wiz-next" class="px-5 sm:px-6 py-2.5 rounded-xl text-sm font-semibold bg-brand text-white hover:bg-brandDark transition flex items-center gap-1.5">Next<span class="w-4 h-4">${ICON.arrowRight}</span></button>`
+          : `<button id="wiz-publish" class="px-5 sm:px-6 py-2.5 rounded-xl text-sm font-semibold bg-emerald-600 text-white hover:bg-emerald-700 transition flex items-center gap-1.5"><span class="w-4 h-4">${ICON.check}</span>Publish Update</button>`}
+      </div>
+    </div>
+  </div>`;
+}
+
+function buildStep1(){
+  return `
+  <div>
+    <h4 class="font-bold text-gray-900">What would you like to post?</h4>
+    <p class="text-sm text-gray-500 mt-0.5 mb-4">Select the type of update you want to publish.</p>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+      ${WIZARD_TYPES.map(t => {
+        const selected = wizard.type === t.key;
+        const th = TYPE_THEME[t.key];
+        return `
+        <button data-wiz-type="${t.key}" class="relative text-left p-4 rounded-2xl border-2 transition ${selected ? 'border-brand bg-brandLight/40' : 'border-gray-100 hover:border-brandSoft'}">
+          ${selected ? `<span class="absolute top-2.5 right-2.5 w-5 h-5 rounded-full bg-brand text-white flex items-center justify-center"><span class="w-3 h-3">${ICON.check}</span></span>` : ''}
+          <div class="w-10 h-10 rounded-xl ${th.bg} ${th.text} flex items-center justify-center mb-3"><span class="w-5 h-5">${ICON[t.icon]}</span></div>
+          <p class="font-bold text-gray-900">${t.title}</p>
+          <p class="text-xs text-gray-500 mt-1 leading-snug">${t.desc}</p>
+        </button>`;
+      }).join('')}
+    </div>
+  </div>`;
+}
+
+function pillGroup(name, options, current, extraAttr){
+  return options.map(o => `<button type="button" data-pill="${name}" data-value="${o.value}" class="toggle-pill px-4 py-2 rounded-xl text-sm font-semibold border ${current === o.value ? (o.activeClass || 'bg-brand text-white border-brand') : 'bg-white text-gray-600 border-gray-200 hover:border-brandSoft'}">${o.label}</button>`).join('');
+}
+
+/* =========================================================================
+   CUSTOM CONFIRM MODAL (native confirm()/prompt() are unreliable in sandboxed
+   iframes, so every destructive action routes through this instead)
+   ========================================================================= */
+function openConfirmModal(opts){
+  const o = Object.assign({ title:'Are you sure?', message:'', confirmLabel:'Confirm', danger:true, onConfirm:()=>{} }, opts);
+  const html = `
+  <div class="fixed inset-0 z-[80] flex items-end sm:items-center justify-center p-0 sm:p-4">
+    <div class="absolute inset-0 bg-ink/45" data-close-modal></div>
+    <div class="relative bg-white w-full sm:max-w-sm rounded-t-3xl sm:rounded-3xl shadow-2xl pop-in p-6 text-center">
+      <div class="w-12 h-12 rounded-2xl ${o.danger ? 'bg-red-50 text-red-600' : 'bg-brandLight text-brand'} flex items-center justify-center mx-auto mb-3">
+        <span class="w-6 h-6">${o.danger ? ICON.trash : ICON.info}</span>
+      </div>
+      <h3 class="text-lg font-bold">${escapeHtml(o.title)}</h3>
+      ${o.message ? `<p class="text-sm text-gray-500 mt-1.5">${escapeHtml(o.message)}</p>` : ''}
+      <div class="flex items-center gap-2 mt-5">
+        <button data-close-modal class="flex-1 px-4 py-2.5 rounded-xl text-sm font-semibold text-gray-600 hover:bg-gray-100 border border-gray-200">Cancel</button>
+        <button id="btn-confirm-yes" class="flex-1 px-4 py-2.5 rounded-xl text-sm font-semibold text-white ${o.danger ? 'bg-red-600 hover:bg-red-700' : 'bg-brand hover:bg-brandDark'}">${escapeHtml(o.confirmLabel)}</button>
+      </div>
+    </div>
+  </div>`;
+  const node = renderModal(html, true);
+  node.querySelector('#btn-confirm-yes').addEventListener('click', () => {
+    closeTopModal();
+    o.onConfirm();
+  });
+}
+
+/* ---------------- WIZARD STEP 2 ---------------- */
+function buildStep2(){
+  if (wizard.type === 'schedule') return buildScheduleStep2();
+  if (wizard.type === 'todo') return buildTodoStep2();
+  if (wizard.type === 'announcement') return buildAnnouncementStep2();
+  return '<p class="text-sm text-gray-500">Please choose a type first.</p>';
+}
+function typeHeaderHtml(key, title, desc){
+  const th = TYPE_THEME[key];
+  const iconKey = key === 'schedule' ? 'calendar' : key === 'todo' ? 'checklist' : 'megaphone';
+  return `
+  <div class="flex items-start gap-3 ${th.bg} rounded-2xl p-4 mb-5">
+    <div class="w-10 h-10 rounded-xl bg-white/70 ${th.text} flex items-center justify-center shrink-0"><span class="w-5 h-5">${ICON[iconKey]}</span></div>
+    <div>
+      <p class="font-bold ${th.text}">${title}</p>
+      <p class="text-xs text-gray-600 mt-0.5">${desc}</p>
+    </div>
+  </div>`;
+}
+
+function buildScheduleStep2(){
+  const s = wizard.schedule;
+  const modalityOpts = [
+    { value:'Face to Face', label:'Face to Face', activeClass:'bg-emerald-600 text-white border-emerald-600' },
+    { value:'Online', label:'Online', activeClass:'bg-sky-600 text-white border-sky-600' },
+    { value:'Hybrid', label:'Hybrid', activeClass:'bg-violet-600 text-white border-violet-600' },
+  ];
+  return `
+  <div>
+    ${typeHeaderHtml('schedule', 'Schedule Update', 'Post class schedules, class cancellations, or modality updates.')}
+    <div class="space-y-4">
+      <div>
+        <label class="text-sm font-semibold text-gray-700">Title / Subject</label>
+        <input id="f-sc-title" type="text" value="${escapeHtml(s.title)}" placeholder="e.g. Class Cancellation, Change in Schedule" class="mt-1.5 w-full border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm focus:border-brand" />
+      </div>
+      <div>
+        <label class="text-sm font-semibold text-gray-700">Modality</label>
+        <div class="flex flex-wrap gap-2 mt-1.5">${pillGroup('modality', modalityOpts, s.modality)}</div>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="text-sm font-semibold text-gray-700">Date</label>
+          <input id="f-sc-date" type="date" value="${s.date}" class="mt-1.5 w-full border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm focus:border-brand" />
+        </div>
+        <div>
+          <label class="text-sm font-semibold text-gray-700">Time</label>
+          <input id="f-sc-time" type="time" value="${s.time}" ${s.useDefaultTime==='yes' ? 'disabled' : ''} class="mt-1.5 w-full border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm focus:border-brand disabled:bg-gray-50 disabled:text-gray-400" />
+        </div>
+      </div>
+      <div>
+        <label class="text-sm font-semibold text-gray-700">Use default time?</label>
+        <p class="text-xs text-gray-400 mb-1.5">Applies the class's regular time slot instead of a custom time.</p>
+        <div class="flex gap-2">${pillGroup('useDefaultTime', [{value:'yes',label:'Yes'},{value:'no',label:'No'}], s.useDefaultTime)}</div>
+      </div>
+      <div>
+        <label class="text-sm font-semibold text-gray-700">Would you like to set an end time?</label>
+        <div class="flex gap-2 mt-1.5">${pillGroup('hasEndTime', [{value:'yes',label:'Yes'},{value:'no',label:'No'}], s.hasEndTime)}</div>
+      </div>
+      ${s.hasEndTime === 'yes' ? `
+      <div>
+        <label class="text-sm font-semibold text-gray-700">End Time</label>
+        <input id="f-sc-endtime" type="time" value="${s.endTime}" class="mt-1.5 w-full border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm focus:border-brand" />
+      </div>` : ''}
+    </div>
+  </div>`;
+}
+
+function buildTodoStep2(){
+  const t = wizard.todo;
+  const priorityOpts = [
+    { value:'Low', label:'Low', activeClass:'bg-emerald-600 text-white border-emerald-600' },
+    { value:'Medium', label:'Medium', activeClass:'bg-amber-500 text-white border-amber-500' },
+    { value:'High', label:'High', activeClass:'bg-red-600 text-white border-red-600' },
+  ];
+  return `
+  <div>
+    ${typeHeaderHtml('todo', 'To-Do List Update', 'Add tasks, deadlines, and important reminders for the section.')}
+    <div class="space-y-4">
+      <div>
+        <label class="text-sm font-semibold text-gray-700">Subject / Course</label>
+        <div class="relative mt-1.5">
+          <select id="f-td-course" class="w-full appearance-none border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm focus:border-brand bg-white">
+            ${COURSES.map(c => `<option value="${c.code}" ${t.course===c.code?'selected':''}>${c.code} - ${c.title}</option>`).join('')}
+          </select>
+          <span class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400">${ICON.chevronDown}</span>
+        </div>
+      </div>
+      <div>
+        <label class="text-sm font-semibold text-gray-700">Task / What to do</label>
+        <input id="f-td-title" type="text" value="${escapeHtml(t.title)}" placeholder="e.g. Submit report, Reviewer, Read pages..." class="mt-1.5 w-full border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm focus:border-brand" />
+      </div>
+      <div>
+        <label class="text-sm font-semibold text-gray-700">Details <span class="text-gray-400 font-normal">(optional)</span></label>
+        <textarea id="f-td-desc" rows="2" placeholder="Add a short paragraph with more info..." class="mt-1.5 w-full border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm focus:border-brand resize-none">${escapeHtml(t.description)}</textarea>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="text-sm font-semibold text-gray-700">Deadline Date</label>
+          <input id="f-td-date" type="date" value="${t.date}" class="mt-1.5 w-full border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm focus:border-brand" />
+        </div>
+        <div>
+          <label class="text-sm font-semibold text-gray-700">Deadline Time</label>
+          <input id="f-td-time" type="time" value="${t.time}" class="mt-1.5 w-full border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm focus:border-brand" />
+        </div>
+      </div>
+      <div>
+        <label class="text-sm font-semibold text-gray-700">Priority <span class="text-gray-400 font-normal">(optional)</span></label>
+        <div class="flex flex-wrap gap-2 mt-1.5">${pillGroup('priority', priorityOpts, t.priority)}</div>
+      </div>
+      <div>
+        <label class="text-sm font-semibold text-gray-700">Is this an event?</label>
+        <p class="text-xs text-gray-400 mb-1.5">If yes, this will also appear under Upcoming Events.</p>
+        <div class="flex gap-2">${pillGroup('isEvent', [{value:'yes',label:'Yes'},{value:'no',label:'No'}], t.isEvent)}</div>
+      </div>
+      <label class="flex items-center gap-2.5 pt-1">
+        <input id="f-td-urgent" type="checkbox" ${t.urgent ? 'checked' : ''} class="w-4 h-4 rounded accent-brand" />
+        <span class="text-sm font-medium text-gray-700">Mark as urgent</span>
+      </label>
+    </div>
+  </div>`;
+}
+
+function buildAnnouncementStep2(){
+  const a = wizard.announcement;
+  const swatches = ['#FCEBF0','#FFF7E6','#E8F6EE','#E9F1FB','#F3EEFF','#FFFFFF'];
+  return `
+  <div>
+    ${typeHeaderHtml('announcement', 'Main Announcement', 'Post important announcements for everyone to see.')}
+    <div class="space-y-4">
+      <div>
+        <label class="text-sm font-semibold text-gray-700">Title / Subject</label>
+        <input id="f-an-title" type="text" value="${escapeHtml(a.title)}" placeholder="e.g. No Classes Today!" class="mt-1.5 w-full border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm focus:border-brand" />
+      </div>
+      <div>
+        <label class="text-sm font-semibold text-gray-700">Announcement</label>
+        <div class="mt-1.5 border border-gray-200 rounded-xl overflow-hidden">
+          <div class="flex items-center gap-1 border-b border-gray-100 bg-gray-50 px-2 py-1.5 relative">
+            <button type="button" data-cmd="bold" class="w-8 h-8 rounded-lg hover:bg-gray-200 flex items-center justify-center text-gray-600"><span class="w-4 h-4">${ICON.bold}</span></button>
+            <button type="button" data-cmd="italic" class="w-8 h-8 rounded-lg hover:bg-gray-200 flex items-center justify-center text-gray-600"><span class="w-4 h-4">${ICON.italic}</span></button>
+            <button type="button" data-cmd="underline" class="w-8 h-8 rounded-lg hover:bg-gray-200 flex items-center justify-center text-gray-600"><span class="w-4 h-4">${ICON.underline}</span></button>
+            <span class="w-px h-5 bg-gray-200 mx-1"></span>
+            <button type="button" data-cmd="insertUnorderedList" class="w-8 h-8 rounded-lg hover:bg-gray-200 flex items-center justify-center text-gray-600"><span class="w-4 h-4">${ICON.listBullet}</span></button>
+            <button type="button" data-cmd="insertOrderedList" class="w-8 h-8 rounded-lg hover:bg-gray-200 flex items-center justify-center text-gray-600"><span class="w-4 h-4">${ICON.listNumber}</span></button>
+            <span class="w-px h-5 bg-gray-200 mx-1"></span>
+            <button type="button" id="btn-toggle-link-row" class="w-8 h-8 rounded-lg hover:bg-gray-200 flex items-center justify-center text-gray-600"><span class="w-4 h-4">${ICON.linkSm}</span></button>
+          </div>
+          <div id="link-row" class="hidden items-center gap-1.5 px-2 py-1.5 border-b border-gray-100 bg-white">
+            <input id="link-url-input" type="url" placeholder="https://example.com" class="flex-1 text-xs border border-gray-200 rounded-lg px-2.5 py-1.5 focus:border-brand" />
+            <button type="button" id="btn-apply-link" class="text-xs font-semibold text-white bg-brand px-2.5 py-1.5 rounded-lg hover:bg-brandDark">Apply</button>
+          </div>
+          <div id="announcement-editor" class="rte px-3.5 py-3 text-sm focus:outline-none" contenteditable="true" data-placeholder="Type your announcement here...">${a.bodyHtml}</div>
+        </div>
+      </div>
+      <div>
+        <label class="text-sm font-semibold text-gray-700">Background Color</label>
+        <div class="flex items-center gap-2 mt-1.5 flex-wrap">
+          <input id="f-an-color" type="color" value="${a.bg}" class="w-10 h-10 rounded-lg border border-gray-200 p-0.5 cursor-pointer" />
+          <input id="f-an-hex" type="text" value="${a.bg}" maxlength="7" class="w-28 border border-gray-200 rounded-xl px-3 py-2 text-sm font-mono uppercase focus:border-brand" />
+          <div class="flex items-center gap-1.5 ml-1">
+            ${swatches.map(c => `<button type="button" data-swatch="${c}" class="w-7 h-7 rounded-full border-2 ${a.bg.toUpperCase()===c.toUpperCase() ? 'border-brand' : 'border-white'} shadow-sm" style="background:${c}"></button>`).join('')}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+/* ---------------- WIZARD STEP 3 — REVIEW ---------------- */
+function buildStep3(){
+  const th = TYPE_THEME[wizard.type];
+  const typeLabel = wizard.type === 'schedule' ? 'Schedule Update' : wizard.type === 'todo' ? 'To-Do List Update' : 'Main Announcement';
+  const iconKey = wizard.type === 'schedule' ? 'calendar' : wizard.type === 'todo' ? 'checklist' : 'megaphone';
+
+  let body = '';
+  if (wizard.type === 'schedule'){
+    const s = wizard.schedule;
+    const dateObj = new Date(s.date + 'T00:00:00');
+    body = `
+      <p class="text-xs font-semibold text-gray-400 uppercase tracking-wide mt-5">Title / Subject</p>
+      <p class="text-xl font-bold text-gray-900 mt-1">${escapeHtml(s.title || '(untitled)')}</p>
+      <div class="flex flex-wrap gap-2 mt-3">
+        <span class="px-3 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-700">${escapeHtml(s.modality)}</span>
+        <span class="px-3 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-700">${dateObj.toLocaleDateString('en-US',{weekday:'long', month:'short', day:'numeric', year:'numeric'})}</span>
+        <span class="px-3 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-700">${s.useDefaultTime==='yes' ? 'Regular class time' : to12h(...s.time.split(':'))}${s.hasEndTime==='yes' && s.endTime ? ' – ' + to12h(...s.endTime.split(':')) : ''}</span>
+      </div>`;
+  } else if (wizard.type === 'todo'){
+    const t = wizard.todo;
+    const deadlineIso = phDateTimeToISO(t.date, t.time);
+    const due = new Date(deadlineIso);
+    body = `
+      <p class="text-xs font-semibold text-gray-400 uppercase tracking-wide mt-5">Course</p>
+      <p class="text-base font-semibold text-gray-900 mt-1">${escapeHtml(t.course)} — ${escapeHtml(courseTitle(t.course))}</p>
+      <p class="text-xs font-semibold text-gray-400 uppercase tracking-wide mt-4">Task</p>
+      <p class="text-xl font-bold text-gray-900 mt-1">${escapeHtml(t.title || '(untitled)')}</p>
+      ${t.description ? `<p class="text-sm text-gray-600 mt-1.5">${escapeHtml(t.description)}</p>` : ''}
+      <div class="flex flex-wrap gap-2 mt-3">
+        <span class="px-3 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-700">Due ${fmtDateTimePH(due)}</span>
+        <span class="px-3 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-700">${t.priority} priority</span>
+        ${t.isEvent === 'yes' ? `<span class="px-3 py-1 rounded-full text-xs font-semibold bg-purple-100 text-purple-700">Shows in Upcoming Events</span>` : ''}
+        ${t.urgent ? `<span class="px-3 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-700">Urgent</span>` : ''}
+      </div>`;
+  } else if (wizard.type === 'announcement'){
+    const a = wizard.announcement;
+    const textColor = textColorFor(a.bg);
+    body = `
+      <p class="text-xs font-semibold text-gray-400 uppercase tracking-wide mt-5">Title / Subject</p>
+      <p class="text-xl font-bold text-gray-900 mt-1">${escapeHtml(a.title || '(untitled)')}</p>
+      <div class="mt-3 rounded-2xl p-4 rte text-sm leading-7" style="background:${a.bg}; color:${textColor}">
+        ${a.bodyHtml && a.bodyHtml.replace(/<[^>]+>/g,'').trim() ? a.bodyHtml : '<p class="opacity-50">(no content yet)</p>'}
+      </div>`;
+  }
+
+  return `
+  <div>
+    <h4 class="font-bold text-gray-900">Review your update</h4>
+    <p class="text-sm text-gray-500 mt-0.5">Please review the details before posting.</p>
+    <span class="inline-flex items-center gap-1.5 mt-4 px-3 py-1.5 rounded-full text-xs font-bold ${th.bg} ${th.text}"><span class="w-3.5 h-3.5">${ICON[iconKey]}</span>${typeLabel}</span>
+    ${body}
+    <p class="text-xs text-gray-400 mt-5">Posting on: ${fmtDateTimePH(new Date())}</p>
+  </div>`;
+}
