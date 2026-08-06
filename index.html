@@ -5,24 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>UPDATES — AB ELS 4-5</title>
 
+  <script src="https://cdn.tailwindcss.com"></script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=STIX+Two+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-  <script src="https://cdn.tailwindcss.com"></script>
 
   <script>
     tailwind.config = {
       theme: {
         extend: {
           colors: {
-            brand: '#AE1C4C',
-            brandDark: '#821338',
-            brandLight: '#FCEBF0',
-            ink: '#2B1218'
+            roseBrand: '#A9445E',
+            roseLight: '#F8EDEF',
+            roseSoft: '#FDF7F8',
+            borderSoft: '#E7D4D9'
           },
           fontFamily: {
-            serif: ['"STIX Two Text"', 'Georgia', 'serif']
+            serif: ['STIX Two Text', 'serif']
           }
         }
       }
@@ -30,382 +30,280 @@
   </script>
 
   <style>
-    body{
-      font-family: "STIX Two Text", Georgia, serif;
-      background:#FFFAFA;
+    body {
+      font-family: 'STIX Two Text', serif;
+    }
+
+    .shimmer {
+      position: relative;
+      overflow: hidden;
+      background: #ececec;
+    }
+
+    .shimmer::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      transform: translateX(-100%);
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255,255,255,.7),
+        transparent
+      );
+      animation: shimmer 1.4s infinite;
+    }
+
+    @keyframes shimmer {
+      100% {
+        transform: translateX(100%);
+      }
     }
   </style>
 </head>
-<body class="text-ink">
 
-  <div class="min-h-screen lg:flex">
+<body class="bg-[#FAF6F7] text-gray-900">
 
-    <aside class="hidden lg:flex lg:w-64 bg-white border-r border-gray-100 flex-col">
-      <div class="p-6 border-b border-gray-100">
-        <h1 class="text-2xl font-bold text-brand">UPDATES</h1>
+  <!-- Skeleton Loader -->
+  <div id="loader" class="min-h-screen p-6 space-y-4">
+    <div class="h-24 rounded-3xl shimmer"></div>
+    <div class="h-72 rounded-3xl shimmer"></div>
+
+    <div class="grid md:grid-cols-3 gap-4">
+      <div class="h-32 rounded-2xl shimmer"></div>
+      <div class="h-32 rounded-2xl shimmer"></div>
+      <div class="h-32 rounded-2xl shimmer"></div>
+    </div>
+
+    <div class="h-72 rounded-3xl shimmer"></div>
+  </div>
+
+  <!-- App -->
+  <div id="app" class="hidden min-h-screen lg:flex">
+
+    <!-- Sidebar -->
+    <aside class="hidden lg:flex lg:w-64 bg-white border-r border-borderSoft flex-col">
+      <div class="p-6 border-b border-borderSoft">
+        <h1 class="text-2xl font-bold text-roseBrand">UPDATES</h1>
         <p class="text-sm text-gray-500">AB ELS 4-5</p>
       </div>
 
-      <nav class="p-4 space-y-2 text-sm">
-        <a href="#" data-page="home" class="nav-link block px-4 py-3 rounded-xl bg-brandLight text-brand font-semibold">Home</a>
-        <a href="#" data-page="schedule" class="nav-link block px-4 py-3 rounded-xl text-gray-600 hover:bg-gray-50">Schedule</a>
-        <a href="#" data-page="todo" class="nav-link block px-4 py-3 rounded-xl text-gray-600 hover:bg-gray-50">To-Do List</a>
-        <a href="#" data-page="professors" class="nav-link block px-4 py-3 rounded-xl text-gray-600 hover:bg-gray-50">Professors</a>
-        <a href="#" data-page="announcements" class="nav-link block px-4 py-3 rounded-xl text-gray-600 hover:bg-gray-50">Announcements</a>
+      <nav class="p-4 space-y-1 text-sm">
+        <a class="flex items-center gap-3 px-4 py-3 rounded-xl bg-roseLight text-roseBrand font-semibold" href="#">Home</a>
+        <a class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-roseSoft text-gray-700" href="#schedule">Schedule</a>
+        <a class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-roseSoft text-gray-700" href="#todo">To-Do List</a>
+        <a class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-roseSoft text-gray-700" href="#announcements">Announcements</a>
       </nav>
 
-      <div class="mt-auto p-4 border-t border-gray-100">
-        <button id="adminBtn" class="text-sm text-brand font-medium">Admin Access</button>
+      <div class="mt-auto p-4 border-t border-borderSoft">
+        <div class="flex items-center gap-3">
+          <img src="https://i.pravatar.cc/64?img=12" class="w-10 h-10 rounded-full" alt="Profile">
+          <div>
+            <p class="text-sm font-semibold">Karl Lexter</p>
+            <p class="text-xs text-gray-500">President</p>
+          </div>
+        </div>
       </div>
     </aside>
 
-    <main class="flex-1 p-4 lg:p-8 max-w-6xl mx-auto w-full pb-24 lg:pb-8">
+    <!-- Main -->
+    <main class="flex-1 p-4 lg:p-8 max-w-7xl mx-auto w-full pb-24">
 
-      <div class="lg:hidden flex items-center justify-between mb-6">
-        <div>
-          <h1 class="text-2xl font-bold text-brand leading-none">UPDATES</h1>
-          <p class="text-sm text-gray-500">AB ELS 4-5</p>
-        </div>
-        <button id="adminBtnMobile" class="text-sm text-brand font-medium">Admin</button>
-      </div>
+      <!-- Header Banner -->
+      <section class="bg-gradient-to-r from-[#F8EDEF] via-[#F6E7EA] to-[#F9F1F3] border border-borderSoft rounded-[2rem] p-6 lg:p-8 mb-6">
+        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+          <div>
+            <h2 class="text-3xl lg:text-4xl font-bold text-roseBrand">Hello there!</h2>
+            <p class="text-lg text-gray-700 mt-1">Here’s what’s new and what’s next</p>
+          </div>
 
-      <section id="home" class="page">
-        <div class="bg-gradient-to-br from-brand to-brandDark text-white rounded-3xl p-6 lg:p-8 shadow-lg">
-          <h2 class="text-3xl lg:text-4xl font-bold">Hello there!</h2>
-          <p class="mt-2 text-white/90 text-lg">Here's what's new and what's next.</p>
-          <p id="clock" class="mt-4 inline-block bg-white/15 px-3 py-2 rounded-full text-sm"></p>
-        </div>
-
-        <div class="mt-6 bg-brandLight border border-pink-200 rounded-3xl p-6 shadow-sm">
-          <div class="flex items-center justify-between flex-wrap gap-2 mb-4">
-            <h3 class="text-2xl font-bold text-brand">Announcement</h3>
-            <span id="announceDate" class="text-sm text-gray-500"></span>
-          </div>
-          <h4 id="announceTitle" class="text-3xl font-bold mb-3">WE HAVE NO CLASSES TODAY!</h4>
-          <p id="announceBody" class="text-lg leading-8 text-gray-800">
-            Take this time to catch up on your tasks and prepare for the week ahead. Stay productive, everyone!
-          </p>
-          <div class="mt-8 text-right text-gray-700">
-            <p>Yours Truly,</p>
-            <p class="font-semibold">Karl Lexter</p>
-          </div>
-        </div>
-
-        <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div class="bg-white rounded-2xl p-5 border border-pink-100 shadow-sm">
-            <p class="text-sm text-gray-500 uppercase font-semibold">Next Class</p>
-            <p class="text-xl font-bold mt-2">Wednesday</p>
-            <p class="text-sm text-gray-500">1:30 PM</p>
-          </div>
-          <div class="bg-white rounded-2xl p-5 border border-pink-100 shadow-sm">
-            <p class="text-sm text-gray-500 uppercase font-semibold">Modality</p>
-            <p class="text-xl font-bold mt-2">Face to Face</p>
-            <p class="text-sm text-gray-500">ENGL 401</p>
-          </div>
-          <div class="bg-white rounded-2xl p-5 border border-pink-100 shadow-sm">
-            <p class="text-sm text-gray-500 uppercase font-semibold">Urgent Tasks</p>
-            <p class="text-xl font-bold text-amber-700 mt-2">2 Due Soon</p>
-            <p class="text-sm text-gray-500">Check your to-do list</p>
-          </div>
-        </div>
-
-        <div class="mt-6 bg-white rounded-3xl p-6 border border-pink-100 shadow-sm">
-          <div class="flex items-center justify-between mb-4">
-            <h3 class="text-xl font-bold">Quick Links</h3>
-          </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <a href="https://drive.google.com" target="_blank" class="p-4 rounded-2xl border border-gray-100 hover:border-brand hover:bg-brandLight transition">ENGL 401 Drive</a>
-            <a href="https://drive.google.com" target="_blank" class="p-4 rounded-2xl border border-gray-100 hover:border-brand hover:bg-brandLight transition">ENGL 402 Drive</a>
-            <a href="https://drive.google.com" target="_blank" class="p-4 rounded-2xl border border-gray-100 hover:border-brand hover:bg-brandLight transition">ENGL 451 Drive</a>
-            <a href="https://drive.google.com" target="_blank" class="p-4 rounded-2xl border border-gray-100 hover:border-brand hover:bg-brandLight transition">ENGL 453 Drive</a>
-          </div>
+          <a href="admin.html" class="inline-flex items-center justify-center gap-2 bg-roseBrand text-white px-5 py-3 rounded-xl font-semibold hover:opacity-90 transition">
+            + Create Update
+          </a>
         </div>
       </section>
 
-      <section id="schedule" class="page hidden">
-        <div class="bg-white rounded-3xl p-6 border border-pink-100 shadow-sm">
-          <h2 class="text-2xl font-bold mb-4">Weekly Schedule</h2>
-          <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
-              <thead>
-                <tr class="border-b">
-                  <th class="py-3">Course</th>
-                  <th class="py-3">Day</th>
-                  <th class="py-3">Time</th>
-                  <th class="py-3">Mode</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr class="border-b"><td class="py-3">ENGL 401</td><td>Wednesday</td><td>1:30–4:30 PM</td><td>Face to Face</td></tr>
-                <tr class="border-b"><td class="py-3">ENGL 402</td><td>Wednesday</td><td>4:30–7:30 PM</td><td>Face to Face</td></tr>
-                <tr class="border-b"><td class="py-3">ENGL 451</td><td>Saturday</td><td>2:00–4:00 PM</td><td>Online</td></tr>
-                <tr><td class="py-3">ENGL 453</td><td>Saturday</td><td>10:30 AM–1:30 PM</td><td>Online</td></tr>
-              </tbody>
-            </table>
+      <!-- Announcement -->
+      <section id="announcements" class="bg-white rounded-[2rem] border border-borderSoft p-6 lg:p-8 shadow-sm">
+
+        <div class="flex items-center justify-between flex-wrap gap-3 mb-6">
+          <div class="flex items-center gap-3">
+
+            <div class="w-12 h-12 rounded-xl bg-roseLight flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-roseBrand" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.4-1.4A2 2 0 0118 14.2V11a6 6 0 10-12 0v3.2c0 .5-.2 1-.6 1.4L4 17h5m6 0a3 3 0 11-6 0m6 0H9"/>
+              </svg>
+            </div>
+
+            <h3 class="text-2xl font-bold uppercase text-roseBrand">Main Announcement</h3>
           </div>
+
+          <span id="phTime" class="text-sm text-gray-500"></span>
+        </div>
+
+        <h4 class="text-3xl lg:text-4xl font-bold leading-tight mb-4">
+          WE HAVE NO CLASSES TODAY!
+        </h4>
+
+        <p class="text-lg leading-8 text-gray-800">
+          Take this time to catch up on your tasks and prepare for the week ahead.
+          Stay productive, everyone!
+        </p>
+
+        <div class="mt-8 text-right">
+          <p>Yours Truly,</p>
+          <p class="font-semibold">Karl Lexter</p>
         </div>
       </section>
 
-      <section id="todo" class="page hidden">
-        <div class="bg-white rounded-3xl p-6 border border-pink-100 shadow-sm">
-          <div class="flex items-center justify-between mb-4 gap-3">
-            <h2 class="text-2xl font-bold">To-Do List</h2>
-            <button id="addTaskBtn" class="hidden bg-brand text-white px-4 py-2 rounded-xl text-sm font-semibold">+ Add Task</button>
-          </div>
+      <!-- Quick Links -->
+      <section class="bg-white rounded-[2rem] border border-borderSoft p-5 lg:p-6 shadow-sm mt-6 mb-16">
 
-          <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
-              <thead>
-                <tr class="border-b text-sm text-gray-500 uppercase">
-                  <th class="py-3">Course</th>
-                  <th class="py-3">Task</th>
-                  <th class="py-3">Deadline</th>
-                  <th class="py-3">Status</th>
-                  <th class="py-3 text-right hidden" id="todoActionsHead">Actions</th>
-                </tr>
-              </thead>
-              <tbody id="todoBody"></tbody>
-            </table>
+        <div class="flex items-center justify-between mb-5">
+          <h3 class="text-2xl font-bold text-roseBrand">Quick Links</h3>
+
+          <div class="flex items-center gap-3">
+            <button onclick="openLinkModal()" class="px-3 py-2 rounded-xl bg-roseBrand text-white text-sm font-semibold hover:opacity-90">
+              + Add Link
+            </button>
+
+            <button onclick="toggleAllLinks()" class="text-sm font-semibold text-roseBrand underline">
+              See all
+            </button>
           </div>
         </div>
-      </section>
 
-      <section id="professors" class="page hidden">
-        <div class="bg-white rounded-3xl p-6 border border-pink-100 shadow-sm">
-          <h2 class="text-2xl font-bold mb-4">Professors</h2>
-          <div class="space-y-4">
-            <div class="p-4 rounded-2xl border border-gray-100">
-              <p class="font-semibold">Prof. A</p>
-              <p class="text-sm text-gray-500">ENGL 401 — Special Topics in English Across Professions</p>
-            </div>
-            <div class="p-4 rounded-2xl border border-gray-100">
-              <p class="font-semibold">Prof. B</p>
-              <p class="text-sm text-gray-500">ENGL 402 — Practicum 1: On-Campus Practicum</p>
-            </div>
-            <div class="p-4 rounded-2xl border border-gray-100">
-              <p class="font-semibold">Prof. C</p>
-              <p class="text-sm text-gray-500">ENGL 451 — Instructional Materials Development and Evaluation</p>
-            </div>
-            <div class="p-4 rounded-2xl border border-gray-100">
-              <p class="font-semibold">Prof. D</p>
-              <p class="text-sm text-gray-500">ENGL 453 — Registers in English</p>
-            </div>
-          </div>
+        <div id="quickLinks" class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm">
+
+          <a href="https://drive.google.com" target="_blank" class="flex flex-col gap-2 p-4 rounded-2xl border border-borderSoft hover:bg-roseSoft transition">
+            <div class="w-10 h-10 rounded-xl bg-roseLight flex items-center justify-center text-roseBrand font-bold">+</div>
+            <span class="font-medium">Special Topics in English</span>
+            <span class="text-xs text-gray-500 break-all">drive.google.com</span>
+          </a>
+
+          <a href="https://drive.google.com" target="_blank" class="flex flex-col gap-2 p-4 rounded-2xl border border-borderSoft hover:bg-roseSoft transition">
+            <div class="w-10 h-10 rounded-xl bg-roseLight flex items-center justify-center text-roseBrand font-bold">+</div>
+            <span class="font-medium">Practicum 1</span>
+            <span class="text-xs text-gray-500 break-all">drive.google.com</span>
+          </a>
+
         </div>
-      </section>
 
-      <section id="announcements" class="page hidden">
-        <div class="bg-white rounded-3xl p-6 border border-pink-100 shadow-sm">
-          <div class="flex items-center justify-between mb-4 gap-3">
-            <h2 class="text-2xl font-bold">Announcements</h2>
-            <button id="editAnnouncementBtn" class="hidden bg-brand text-white px-4 py-2 rounded-xl text-sm font-semibold">Edit Announcement</button>
-          </div>
+        <div id="allLinksDrawer" class="hidden mt-6 border-t border-borderSoft pt-4 space-y-2 text-sm">
 
-          <div class="border border-pink-100 rounded-2xl p-5 bg-brandLight">
-            <p class="text-sm text-gray-500 mb-2" id="announceDatePage"></p>
-            <h3 class="text-2xl font-bold mb-3" id="announceTitlePage"></h3>
-            <p class="leading-8 text-gray-800" id="announceBodyPage"></p>
-          </div>
+          <a href="https://drive.google.com" target="_blank" class="block p-3 rounded-xl hover:bg-roseSoft">
+            Special Topics in English Across Professions
+          </a>
+
+          <a href="https://drive.google.com" target="_blank" class="block p-3 rounded-xl hover:bg-roseSoft">
+            Practicum 1: On-Campus Practicum
+          </a>
+
         </div>
       </section>
 
     </main>
   </div>
 
-  <nav class="lg:hidden fixed bottom-0 inset-x-0 bg-white border-t border-gray-200 z-20">
-    <div class="grid grid-cols-5 text-xs">
-      <a href="#" data-page="home" class="mobile-link flex flex-col items-center py-2 text-brand font-semibold">Home</a>
-      <a href="#" data-page="schedule" class="mobile-link flex flex-col items-center py-2 text-gray-500">Sched</a>
-      <a href="#" data-page="todo" class="mobile-link flex flex-col items-center py-2 text-gray-500">To-Do</a>
-      <a href="#" data-page="professors" class="mobile-link flex flex-col items-center py-2 text-gray-500">Profs</a>
-      <a href="#" data-page="announcements" class="mobile-link flex flex-col items-center py-2 text-gray-500">News</a>
+  <!-- Add Link Modal -->
+  <div id="linkModal" class="hidden fixed inset-0 bg-black/40 flex items-center justify-center p-4 z-50">
+
+    <div class="bg-white rounded-3xl w-full max-w-md p-6">
+
+      <div class="flex items-center justify-between mb-4">
+        <h4 class="text-xl font-bold text-roseBrand">Add Quick Link</h4>
+        <button onclick="closeLinkModal()" class="text-gray-400 hover:text-gray-600">✕</button>
+      </div>
+
+      <div class="space-y-3">
+        <input id="linkName" type="text" placeholder="Link name" class="w-full border border-borderSoft rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-roseBrand/30">
+
+        <input id="linkUrl" type="url" placeholder="https://example.com" class="w-full border border-borderSoft rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-roseBrand/30">
+      </div>
+
+      <div class="flex justify-end gap-3 mt-6">
+        <button onclick="closeLinkModal()" class="px-4 py-2 rounded-xl border border-borderSoft">Cancel</button>
+
+        <button onclick="addQuickLink()" class="px-4 py-2 rounded-xl bg-roseBrand text-white font-semibold">
+          Add Link
+        </button>
+      </div>
     </div>
-  </nav>
+  </div>
 
   <script>
-    const STORAGE_KEY = 'abels_updates_v1';
-    const ADMIN_PASSCODE = '45';
+    // Loader
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        document.getElementById('loader').classList.add('hidden');
+        document.getElementById('app').classList.remove('hidden');
+      }, 1200);
+    });
 
-    const defaultState = {
-      announcement: {
-        title: 'WE HAVE NO CLASSES TODAY!',
-        body: 'Take this time to catch up on your tasks and prepare for the week ahead. Stay productive, everyone!',
-        date: new Date().toISOString()
-      },
-      todos: [
-        { course:'ENGL 401', title:'Speech Analysis Report', deadline:'Aug 8, 2026', status:'Due Soon' },
-        { course:'ENGL 402', title:'Log Practicum Hours', deadline:'Aug 9, 2026', status:'Pending' },
-        { course:'ENGL 451', title:'Instructional Material Draft', deadline:'Aug 12, 2026', status:'Pending' },
-        { course:'ENGL 453', title:'Group Presentation: Registers', deadline:'Aug 13, 2026', status:'Event' }
-      ]
-    };
-
-    let state = loadState();
-    let isAdmin = false;
-
-    function loadState(){
-      try{
-        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || structuredClone(defaultState);
-      }catch{
-        return structuredClone(defaultState);
-      }
-    }
-
-    function saveState(){
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-    }
-
-    function updateClock(){
+    // Philippine Time
+    function updatePHTime() {
       const now = new Date();
-      document.getElementById('clock').textContent =
-        now.toLocaleString('en-PH', {
-          timeZone:'Asia/Manila',
-          weekday:'long',
-          month:'long',
-          day:'numeric',
-          hour:'numeric',
-          minute:'2-digit',
-          hour12:true
-        });
+
+      const options = {
+        timeZone: 'Asia/Manila',
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit'
+      };
+
+      document.getElementById('phTime').textContent =
+        new Intl.DateTimeFormat('en-PH', options).format(now);
     }
 
-    function renderAnnouncement(){
-      const d = new Date(state.announcement.date).toLocaleString('en-PH', {
-        timeZone:'Asia/Manila',
-        month:'short',
-        day:'numeric',
-        year:'numeric',
-        hour:'numeric',
-        minute:'2-digit',
-        hour12:true
-      });
+    updatePHTime();
+    setInterval(updatePHTime, 60000);
 
-      document.getElementById('announceDate').textContent = 'Posted ' + d;
-      document.getElementById('announceTitle').textContent = state.announcement.title;
-      document.getElementById('announceBody').textContent = state.announcement.body;
-
-      document.getElementById('announceDatePage').textContent = 'Posted ' + d;
-      document.getElementById('announceTitlePage').textContent = state.announcement.title;
-      document.getElementById('announceBodyPage').textContent = state.announcement.body;
+    // Quick Links
+    function toggleAllLinks() {
+      document.getElementById('allLinksDrawer').classList.toggle('hidden');
     }
 
-    function renderTodos(){
-      const body = document.getElementById('todoBody');
-      body.innerHTML = state.todos.map((t, i) => `
-        <tr class="border-b last:border-0">
-          <td class="py-3">${t.course}</td>
-          <td class="py-3 font-medium">${t.title}</td>
-          <td class="py-3">${t.deadline}</td>
-          <td class="py-3"><span class="px-3 py-1 rounded-full text-xs bg-brandLight text-brand font-semibold">${t.status}</span></td>
-          <td class="py-3 text-right ${isAdmin ? '' : 'hidden'}">
-            <button onclick="deleteTask(${i})" class="text-red-600 text-sm font-medium">Delete</button>
-          </td>
-        </tr>
-      `).join('');
-
-      document.getElementById('todoActionsHead').classList.toggle('hidden', !isAdmin);
+    function openLinkModal() {
+      document.getElementById('linkModal').classList.remove('hidden');
     }
 
-    function deleteTask(index){
-      if(confirm('Delete this task?')){
-        state.todos.splice(index,1);
-        saveState();
-        renderTodos();
+    function closeLinkModal() {
+      document.getElementById('linkModal').classList.add('hidden');
+    }
+
+    function addQuickLink() {
+      const name = document.getElementById('linkName').value.trim();
+      const url = document.getElementById('linkUrl').value.trim();
+
+      if (!name || !url) {
+        alert('Please enter both name and URL.');
+        return;
       }
+
+      const container = document.getElementById('quickLinks');
+
+      const card = document.createElement('a');
+      card.href = url;
+      card.target = '_blank';
+      card.className =
+        'flex flex-col gap-2 p-4 rounded-2xl border border-borderSoft hover:bg-roseSoft transition';
+
+      card.innerHTML = `
+        <div class="w-10 h-10 rounded-xl bg-roseLight flex items-center justify-center text-roseBrand font-bold">+</div>
+        <span class="font-medium">${name}</span>
+        <span class="text-xs text-gray-500 break-all">${url}</span>
+      `;
+
+      container.appendChild(card);
+
+      document.getElementById('linkName').value = '';
+      document.getElementById('linkUrl').value = '';
+
+      closeLinkModal();
     }
-
-    function showPage(id){
-      document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
-      document.getElementById(id).classList.remove('hidden');
-
-      document.querySelectorAll('.nav-link').forEach(a => {
-        a.classList.remove('bg-brandLight','text-brand','font-semibold');
-        a.classList.add('text-gray-600');
-        if(a.dataset.page === id){
-          a.classList.add('bg-brandLight','text-brand','font-semibold');
-          a.classList.remove('text-gray-600');
-        }
-      });
-
-      document.querySelectorAll('.mobile-link').forEach(a => {
-        a.classList.remove('text-brand','font-semibold');
-        a.classList.add('text-gray-500');
-        if(a.dataset.page === id){
-          a.classList.add('text-brand','font-semibold');
-          a.classList.remove('text-gray-500');
-        }
-      });
-    }
-
-    document.querySelectorAll('[data-page]').forEach(link => {
-      link.addEventListener('click', e => {
-        e.preventDefault();
-        showPage(link.dataset.page);
-      });
-    });
-
-    function toggleAdmin(){
-      if(isAdmin){
-        isAdmin = false;
-      }else{
-        const pass = prompt('Enter admin passcode:');
-        if(pass === ADMIN_PASSCODE){
-          isAdmin = true;
-          alert('Admin mode enabled');
-        }else if(pass !== null){
-          alert('Incorrect passcode');
-        }
-      }
-      updateAdminUI();
-    }
-
-    function updateAdminUI(){
-      document.getElementById('editAnnouncementBtn').classList.toggle('hidden', !isAdmin);
-      document.getElementById('addTaskBtn').classList.toggle('hidden', !isAdmin);
-      renderTodos();
-    }
-
-    document.getElementById('adminBtn').addEventListener('click', toggleAdmin);
-    document.getElementById('adminBtnMobile').addEventListener('click', toggleAdmin);
-
-    document.getElementById('editAnnouncementBtn').addEventListener('click', () => {
-      const title = prompt('Announcement title', state.announcement.title);
-      if(title === null) return;
-
-      const body = prompt('Announcement body', state.announcement.body);
-      if(body === null) return;
-
-      state.announcement.title = title;
-      state.announcement.body = body;
-      state.announcement.date = new Date().toISOString();
-
-      saveState();
-      renderAnnouncement();
-      alert('Announcement updated');
-    });
-
-    document.getElementById('addTaskBtn').addEventListener('click', () => {
-      const course = prompt('Course code (e.g. ENGL 401)');
-      if(!course) return;
-
-      const title = prompt('Task title');
-      if(!title) return;
-
-      const deadline = prompt('Deadline (e.g. Aug 20, 2026)');
-      if(!deadline) return;
-
-      state.todos.push({ course, title, deadline, status:'Pending' });
-      saveState();
-      renderTodos();
-    });
-
-    updateClock();
-    setInterval(updateClock, 1000);
-
-    renderAnnouncement();
-    renderTodos();
-    updateAdminUI();
-    showPage('home');
   </script>
 
 </body>
