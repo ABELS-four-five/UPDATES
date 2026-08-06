@@ -135,23 +135,22 @@
 
       <!-- Quick Links -->
       <section class="bg-white rounded-[2rem] border border-borderSoft p-5 lg:p-6 shadow-sm mb-6">
-        <div class="flex items-center justify-between mb-5">
+        <div class="mb-5">
           <h3 class="text-2xl font-bold text-roseBrand">Quick Links</h3>
-          <button onclick="toggleAllLinks()" class="text-sm font-semibold text-roseBrand underline">
-            See all
-          </button>
+          <p class="text-sm text-gray-500">Links are added directly in index.html on GitHub.</p>
         </div>
 
+        <!--
+          To add a link, add a card like this inside the grid below:
+
+          <a href="https://example.com" target="_blank"
+             class="flex flex-col gap-2 p-4 rounded-2xl border border-borderSoft hover:bg-roseSoft text-sm">
+            <div class="w-10 h-10 rounded-xl bg-roseLight flex items-center justify-center text-roseBrand font-bold">🔗</div>
+            <span class="font-medium">Link name</span>
+          </a>
+        -->
         <div id="quickLinks" class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm">
-          <div class="flex flex-col gap-2 p-4 rounded-2xl border border-dashed border-borderSoft text-gray-400">
-            <div class="w-10 h-10 rounded-xl bg-roseLight flex items-center justify-center text-roseBrand font-bold">+</div>
-            <span class="font-medium">Add a link later</span>
-            <span class="text-xs">Edit index.html on GitHub</span>
-          </div>
-        </div>
-
-        <div id="allLinksDrawer" class="hidden mt-6 border-t border-borderSoft pt-4 space-y-2 text-sm text-gray-500">
-          <p>No links added yet.</p>
+          <!-- Quick link cards go here -->
         </div>
       </section>
 
@@ -327,11 +326,6 @@
     updatePHTime();
     setInterval(updatePHTime, 60000);
 
-    // Quick links drawer
-    function toggleAllLinks() {
-      document.getElementById('allLinksDrawer').classList.toggle('hidden');
-    }
-
     // To-Do deadline colors
     function updateDeadlineColors() {
       const now = new Date();
@@ -372,29 +366,61 @@
     updateDeadlineColors();
     setInterval(updateDeadlineColors, 60000);
 
-    // Better single-page navigation history
-    document.querySelectorAll('.nav-link').forEach(link => {
-      link.addEventListener('click', function(e) {
-        e.preventDefault();
+    // ---- Single-page navigation with "social media" style back button ----
+    // Behavior: Home is the base history entry. The FIRST time you leave Home,
+    // one entry is pushed on top of it. Jumping between other sections after
+    // that just replaces that same entry (no stacking). So no matter how many
+    // sections you visit, pressing Back always returns straight to Home.
+    let atHome = true;
 
+    function scrollToTop() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function scrollToSection(target) {
+      const el = document.querySelector(target);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', function (e) {
+        e.preventDefault();
         const target = this.getAttribute('href');
 
         if (target === '#top') {
-          history.replaceState(null, '', location.pathname);
-          window.scrollTo({ top: 0, behavior: 'smooth' });
+          scrollToTop();
+          if (!atHome) {
+            // Collapse back to the Home entry instead of pushing a new one.
+            history.replaceState({ home: true }, '', location.pathname);
+            atHome = true;
+          }
         } else {
-          const el = document.querySelector(target);
-          if (el) {
-            history.replaceState(null, '', location.pathname);
-            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          scrollToSection(target);
+          if (atHome) {
+            // Leaving Home for the first time: push exactly one entry.
+            history.pushState({ home: false }, '', target);
+            atHome = false;
+          } else {
+            // Already away from Home: reuse the existing entry.
+            history.replaceState({ home: false }, '', target);
           }
         }
       });
     });
 
-    // If page loads with a hash, remove it so Back returns to the previous page
+    // Pressing the browser/device Back button always returns to Home.
+    window.addEventListener('popstate', () => {
+      atHome = true;
+      scrollToTop();
+    });
+
+    // Normalize the starting URL so a stray hash doesn't confuse the history stack.
     if (location.hash) {
-      history.replaceState(null, '', location.pathname);
+      history.replaceState({ home: true }, '', location.pathname);
+    } else {
+      history.replaceState({ home: true }, '', location.pathname);
     }
   </script>
 
