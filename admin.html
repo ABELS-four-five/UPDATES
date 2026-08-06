@@ -539,5 +539,18 @@
     }
   </script>
 
+  <label class="flex items-center gap-2 text-sm font-medium">
+  <input type="checkbox" id="todoIsEvent" class="rounded border-borderSoft text-roseBrand focus:ring-roseBrand">
+  Mark this task as an upcoming event
+</label>
+
+  const isEvent = document.getElementById('todoIsEvent').checked;
+
+document.getElementById('reviewMeta').innerHTML =
+  '<strong>Deadline:</strong> ' +
+  document.getElementById('todoDate').value + ' ' +
+  document.getElementById('todoTime').value +
+  (isEvent ? '<br><strong>Event:</strong> Yes' : '');
+
 </body>
 </html>
