@@ -6,7 +6,6 @@
   <title>UPDATES - AB ELS 4-5</title>
 
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="style.css">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -30,6 +29,39 @@
       }
     }
   </script>
+
+  <style>
+    body {
+      font-family: 'STIX Two Text', serif;
+      scroll-behavior: smooth;
+    }
+
+    .shimmer {
+      position: relative;
+      overflow: hidden;
+      background: #ececec;
+    }
+
+    .shimmer::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      transform: translateX(-100%);
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255,255,255,.7),
+        transparent
+      );
+      animation: shimmer 1.4s infinite;
+    }
+
+    @keyframes shimmer {
+      100% {
+        transform: translateX(100%);
+      }
+    }
+  </style>
 </head>
 
 <body class="bg-[#FAF6F7] text-gray-900">
@@ -51,7 +83,6 @@
 
     <!-- Main -->
 <main id="top" class="flex-1 p-4 lg:p-8 max-w-7xl mx-auto w-full pb-24">
-    </div>
 
   <!-- Header Banner -->
   <section class="bg-gradient-to-r from-[#F8EDEF] via-[#F6E7EA] to-[#F9F1F3] border border-borderSoft rounded-[2rem] p-6 lg:p-8 mb-6">
