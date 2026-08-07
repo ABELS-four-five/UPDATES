@@ -285,7 +285,7 @@
   <section class="bg-white rounded-[2rem] border border-borderSoft p-5 lg:p-6 shadow-sm mb-16">
     <div class="mb-5">
       <h3 class="text-2xl font-bold text-roseBrand">Quick Links</h3>
-      <p class="text-sm text-gray-500">Links are added directly in index.html on GitHub.</p>
+      <p class="text-sm text-gray-500">Links for online classes and who knows what else :P</p>
     </div>
 
     <div id="quickLinks" class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm">
@@ -302,7 +302,59 @@
         <span class="font-medium">the baddest bitches are in ABELS 4-5 !</span>
       </a>
     </div>
-  </section>
+ <!-- Deadline Status Script -->
+<script>
+  function updateTaskStatuses() {
+    const now = new Date();
+
+    document.querySelectorAll("#todoBody tr").forEach(row => {
+      const deadlineCell = row.querySelector(".deadline-cell");
+      const statusCell = row.querySelector(".status-cell");
+
+      if (!deadlineCell || !statusCell) return;
+
+      const deadline = new Date(deadlineCell.dataset.deadline);
+      const diffMs = deadline - now;
+      const diffHours = diffMs / (1000 * 60 * 60);
+
+      // Remove old colors
+      deadlineCell.classList.remove(
+        "text-green-600",
+        "text-orange-500",
+        "text-red-600"
+      );
+
+      statusCell.classList.remove(
+        "text-green-600",
+        "text-orange-500",
+        "text-red-600"
+      );
+
+      if (diffMs < 0) {
+        // Past deadline
+        deadlineCell.classList.add("text-red-600");
+        statusCell.classList.add("text-red-600");
+        statusCell.textContent = "Overdue";
+      } else if (diffHours < 24) {
+        // Less than 24 hours left
+        deadlineCell.classList.add("text-orange-500");
+        statusCell.classList.add("text-orange-500");
+        statusCell.textContent = "Due Soon";
+      } else {
+        // 24 hours or more left
+        deadlineCell.classList.add("text-green-600");
+        statusCell.classList.add("text-green-600");
+        statusCell.textContent = "On Track";
+      }
+    });
+  }
+
+  // Run when page loads
+  updateTaskStatuses();
+
+  // Update every minute
+  setInterval(updateTaskStatuses, 60000);
+</script>
 
 </main>
 
