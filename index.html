@@ -220,7 +220,7 @@
             <td class="px-4 py-4 align-top">
               Submit reflection paper.
             </td>
-            <td class="px-4 py-4 align-top deadline-cell" data-deadline="2026-08-08T23:59:00">
+            <td class="px-4 py-4 align-top deadline-cell" data-deadline="2026-08-07T00:00:00">
               Aug 7, 2026 · 07:00 PM
             </td>
             <td class="px-4 py-4 align-top status-cell font-semibold"></td>
@@ -233,8 +233,21 @@
             <td class="px-4 py-4 align-top">
               watch wild child by emma roberts
             </td>
-            <td class="px-4 py-4 align-top deadline-cell" data-deadline="2026-08-08T23:59:00">
+            <td class="px-4 py-4 align-top deadline-cell" data-deadline="2026-08-05T00:00:00">
               Aug 5, 2026 · 12:00 AM
+            </td>
+            <td class="px-4 py-4 align-top status-cell font-semibold"></td>
+          </tr>
+
+          <tr class="bg-white border border-borderSoft rounded-2xl">
+            <td class="px-4 py-4 align-top">
+              stream ariana grande
+            </td>
+            <td class="px-4 py-4 align-top">
+              live, laugh, love ari, olivia rodrigo, katseye, every main pop girl
+            </td>
+            <td class="px-4 py-4 align-top deadline-cell" data-deadline="2026-08-07T23:45:00">
+              Aug 7, 2026 · 11:45 PM
             </td>
             <td class="px-4 py-4 align-top status-cell font-semibold"></td>
           </tr>
@@ -301,53 +314,190 @@
         <div class="w-10 h-10 rounded-xl bg-roseLight flex items-center justify-center text-roseBrand font-bold">🔗</div>
         <span class="font-medium">the baddest bitches are in ABELS 4-5 !</span>
       </a>
-</div>
-
-<!-- Deadline Status Script -->
+    </div>
+ <!-- Deadline Status Script -->
 <script>
-document.addEventListener("DOMContentLoaded", function () {
   function updateTaskStatuses() {
     const now = new Date();
+
     document.querySelectorAll("#todoBody tr").forEach(row => {
       const deadlineCell = row.querySelector(".deadline-cell");
       const statusCell = row.querySelector(".status-cell");
+
       if (!deadlineCell || !statusCell) return;
-      
+
       const deadline = new Date(deadlineCell.dataset.deadline);
       const diffMs = deadline - now;
       const diffHours = diffMs / (1000 * 60 * 60);
-      
+
       // Remove old colors
       deadlineCell.classList.remove(
         "text-green-600",
         "text-orange-500",
         "text-red-600"
       );
+
       statusCell.classList.remove(
         "text-green-600",
         "text-orange-500",
         "text-red-600"
       );
-      
+
       if (diffMs < 0) {
+        // Past deadline
         deadlineCell.classList.add("text-red-600");
         statusCell.classList.add("text-red-600");
         statusCell.textContent = "Overdue";
       } else if (diffHours < 24) {
+        // Less than 24 hours left
         deadlineCell.classList.add("text-orange-500");
         statusCell.classList.add("text-orange-500");
         statusCell.textContent = "Due Soon";
       } else {
+        // 24 hours or more left
         deadlineCell.classList.add("text-green-600");
         statusCell.classList.add("text-green-600");
         statusCell.textContent = "On Track";
       }
     });
   }
-  
+
+  // Run when page loads
   updateTaskStatuses();
-  setInterval(updateTaskStatuses, 10000); // Check every 10 seconds
-});
+
+  // Update every minute
+  setInterval(updateTaskStatuses, 60000);
 </script>
+
+</main>
+
+  <script>
+    // Loader
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        document.getElementById('loader').classList.add('hidden');
+        document.getElementById('app').classList.remove('hidden');
+      }, 800);
+    });
+
+    // Philippine Time
+    function updatePHTime() {
+      const now = new Date();
+
+      const options = {
+        timeZone: 'Asia/Manila',
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit'
+      };
+
+      document.getElementById('phTime').textContent =
+        new Intl.DateTimeFormat('en-PH', options).format(now);
+    }
+
+    updatePHTime();
+    setInterval(updatePHTime, 60000);
+
+    // To-Do deadline colors
+    function updateDeadlineColors() {
+      const now = new Date();
+
+      document.querySelectorAll('.deadline-cell').forEach(cell => {
+        const deadline = new Date(cell.dataset.deadline);
+        const statusCell = cell.parentElement.querySelector('.status-cell');
+
+        const diffMs = deadline - now;
+        const diffHours = diffMs / (1000 * 60 * 60);
+
+        cell.classList.remove(
+          'bg-green-100','text-green-800',
+          'bg-yellow-100','text-yellow-800',
+          'bg-red-100','text-red-800'
+        );
+
+        if (diffMs <= 0) {
+          cell.classList.add('bg-red-100','text-red-800');
+          statusCell.textContent = 'TASK IS OVERDUE';
+          statusCell.className = 'px-4 py-4 align-top status-cell font-semibold text-red-700';
+        } else if (diffHours <= 4.9833) {
+          cell.classList.add('bg-red-100','text-red-800');
+          statusCell.textContent = 'Urgent';
+          statusCell.className = 'px-4 py-4 align-top status-cell font-semibold text-red-700';
+        } else if (diffHours <= 24) {
+          cell.classList.add('bg-yellow-100','text-yellow-800');
+          statusCell.textContent = 'Due soon';
+          statusCell.className = 'px-4 py-4 align-top status-cell font-semibold text-yellow-700';
+        } else {
+          cell.classList.add('bg-green-100','text-green-800');
+          statusCell.textContent = 'On track';
+          statusCell.className = 'px-4 py-4 align-top status-cell font-semibold text-green-700';
+        }
+      });
+    }
+
+    updateDeadlineColors();
+    setInterval(updateDeadlineColors, 60000);
+
+    // ---- Single-page navigation with "social media" style back button ----
+    // Behavior: Home is the base history entry. The FIRST time you leave Home,
+    // one entry is pushed on top of it. Jumping between other sections after
+    // that just replaces that same entry (no stacking). So no matter how many
+    // sections you visit, pressing Back always returns straight to Home.
+    let atHome = true;
+
+    function scrollToTop() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function scrollToSection(target) {
+      const el = document.querySelector(target);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = this.getAttribute('href');
+
+        if (target === '#top') {
+          scrollToTop();
+          if (!atHome) {
+            // Collapse back to the Home entry instead of pushing a new one.
+            history.replaceState({ home: true }, '', location.pathname);
+            atHome = true;
+          }
+        } else {
+          scrollToSection(target);
+          if (atHome) {
+            // Leaving Home for the first time: push exactly one entry.
+            history.pushState({ home: false }, '', target);
+            atHome = false;
+          } else {
+            // Already away from Home: reuse the existing entry.
+            history.replaceState({ home: false }, '', target);
+          }
+        }
+      });
+    });
+
+    // Pressing the browser/device Back button always returns to Home.
+    window.addEventListener('popstate', () => {
+      atHome = true;
+      scrollToTop();
+    });
+
+    // Normalize the starting URL so a stray hash doesn't confuse the history stack.
+    if (location.hash) {
+      history.replaceState({ home: true }, '', location.pathname);
+    } else {
+      history.replaceState({ home: true }, '', location.pathname);
+    }
+  </script>
+
 </body>
 </html>
